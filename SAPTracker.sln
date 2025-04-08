@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SAPTracker", "SAPTracker.csproj", "{D50EBF3D-9A25-499C-B192-2A21DC6CC8EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D50EBF3D-9A25-499C-B192-2A21DC6CC8EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D50EBF3D-9A25-499C-B192-2A21DC6CC8EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D50EBF3D-9A25-499C-B192-2A21DC6CC8EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D50EBF3D-9A25-499C-B192-2A21DC6CC8EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26F7B4C3-9BDB-43BB-A9B9-F7DC0C09B2F4}
+	EndGlobalSection
+EndGlobal
