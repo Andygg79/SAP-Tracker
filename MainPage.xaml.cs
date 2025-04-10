@@ -1,25 +1,36 @@
-﻿namespace SAPTracker
-{
-    public partial class MainPage : ContentPage
-    {
-        int count = 0;
+﻿namespace SAPTracker;
 
-        public MainPage()
+public partial class MainPage : ContentPage
+{
+    public MainPage()
+    {
+        InitializeComponent();
+    }
+
+    private async void OnLoginClicked(object sender, EventArgs e)
+    {
+        string email = EmailEntry.Text?.Trim() ?? "";
+        string password = PasswordEntry.Text ?? "";
+
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
-            InitializeComponent();
+            await DisplayAlert("Login Failed", "Please enter both email and password.", "OK");
+            return;
         }
 
-        private void OnCounterClicked(object sender, EventArgs e)
+        if (email == "test@soldier.com" && password == "password123")
         {
-            count++;
-
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-
-            SemanticScreenReader.Announce(CounterBtn.Text);
+            await DisplayAlert("Login Success", $"Welcome, {email}!", "Continue");
+            await Navigation.PushAsync(new SelectionPage());
+        }
+        else
+        {
+            await DisplayAlert("Login Failed", "Invalid credentials. Try again.", "OK");
         }
     }
 
+    private async void OnCreateAccountClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("Coming Soon", "Create account feature not yet implemented.", "OK");
+    }
 }

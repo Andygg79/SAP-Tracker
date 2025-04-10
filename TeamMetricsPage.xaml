@@ -1,0 +1,53 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SAPTracker"
+             x:Class="SAPTracker.TeamMetricsPage"
+             Title="Team Metrics">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Add/Remove Buttons -->
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
+            <Button Text="Add Member"
+                    Clicked="OnAddMemberClicked"
+                    BackgroundColor="#007AFF"
+                    TextColor="White"
+                    CornerRadius="8"
+                    WidthRequest="140" />
+
+            <Button Text="Remove Member"
+                    Clicked="OnRemoveMemberClicked"
+                    BackgroundColor="#FF3B30"
+                    TextColor="White"
+                    CornerRadius="8"
+                    WidthRequest="140" />
+        </HorizontalStackLayout>
+
+        <!-- Team Members Header -->
+        <Label Text="Team Members"
+               FontSize="20"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,15,0,0" />
+
+        <!-- Team List -->
+        <CollectionView x:Name="TeamList"
+                        ItemsLayout="VerticalList"
+                        HeightRequest="500">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="local:Teammate">
+                    <Border StrokeShape="RoundRectangle 10"
+                            BackgroundColor="#EFEFEF"
+                            Margin="5"
+                            Padding="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="{Binding Email}" FontSize="14" TextColor="Gray" />
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

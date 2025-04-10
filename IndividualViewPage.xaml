@@ -1,0 +1,30 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             x:Class="SAPTracker.IndividualViewPage"
+             Title="Individual Metrics">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+
+        <Label Text="Individual Readiness Matrix"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center" />
+
+        <!-- Weapons Qualification Row -->
+        <StackLayout>
+            <Label Text="Weapons Qualification" FontSize="18" />
+            <HorizontalStackLayout Spacing="10">
+                <DatePicker x:Name="WeaponsDatePicker"
+                            DateSelected="OnWeaponsDateChanged"
+                            Date="{x:Static sys:DateTime.Now}"/>
+
+                <Button x:Name="WeaponsStatusButton"
+                        Text="Status"
+                        BackgroundColor="Gray"
+                        TextColor="White" />
+            </HorizontalStackLayout>
+        </StackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>
