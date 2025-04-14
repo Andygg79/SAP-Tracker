@@ -4,27 +4,115 @@
              x:Class="SAPTracker.IndividualViewPage"
              Title="Individual Metrics">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-        <Label Text="Individual Readiness Matrix"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
+            <Label Text="Individual Readiness Matrix"
+           FontSize="24"
+           FontAttributes="Bold"
+           HorizontalOptions="Center" />
 
-        <!-- Weapons Qualification Row -->
-        <StackLayout>
-            <Label Text="Weapons Qualification" FontSize="18" />
-            <HorizontalStackLayout Spacing="10">
-                <DatePicker x:Name="WeaponsDatePicker"
-                            DateSelected="OnWeaponsDateChanged"
-                            Date="{x:Static sys:DateTime.Now}"/>
+            <!-- Weapons Qualification -->
+            <StackLayout>
+                <Label Text="Weapons Qualification" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="WeaponsDatePicker"
+                        DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="WeaponsStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
 
-                <Button x:Name="WeaponsStatusButton"
-                        Text="Status"
-                        BackgroundColor="Gray"
-                        TextColor="White" />
-            </HorizontalStackLayout>
-        </StackLayout>
+            <!-- Dental -->
+            <StackLayout>
+                <Label Text="Dental" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="DentalDatePicker"
+                        DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="DentalStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
 
-    </VerticalStackLayout>
+            <!-- PHA -->
+            <StackLayout>
+                <Label Text="PHA" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="PHADatePicker"
+                        DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="PHAStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+            <!-- VISION -->
+            <StackLayout>
+                <Label Text="VISION" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="VisionDatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="VisionStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- HEARING -->
+            <StackLayout>
+                <Label Text="HEARING" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="HearingDatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="HearingStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- DD93 -->
+            <StackLayout>
+                <Label Text="DD93" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="DD93DatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="DD93StatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- DA5960 -->
+            <StackLayout>
+                <Label Text="DA5960" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="DA5960DatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="DA5960StatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- PRR -->
+            <StackLayout>
+                <Label Text="PRR" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="PRRDatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="PRRStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- SGLV -->
+            <StackLayout>
+                <Label Text="SGLV" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="SGLVDatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="SGLVStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- ARB -->
+            <StackLayout>
+                <Label Text="ARB" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="ARBDatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="ARBStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+            <!-- EVAL -->
+            <StackLayout>
+                <Label Text="EVAL" FontSize="18" />
+                <HorizontalStackLayout Spacing="10">
+                    <DatePicker x:Name="EvalDatePicker" DateSelected="OnMetricDateChanged" />
+                    <Button x:Name="EvalStatusButton" Text="Status" BackgroundColor="Gray" TextColor="White" />
+                </HorizontalStackLayout>
+            </StackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>
