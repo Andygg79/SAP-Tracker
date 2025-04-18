@@ -1,4 +1,6 @@
-﻿namespace SAPTracker;
+﻿using SAPTracker.Services;
+
+namespace SAPTracker;
 
 public partial class MainPage : ContentPage
 {
@@ -31,6 +33,15 @@ public partial class MainPage : ContentPage
 
     private async void OnCreateAccountClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("Coming Soon", "Create account feature not yet implemented.", "OK");
+        await Navigation.PushModalAsync(new RegisterPage());
     }
+    private async void OnGoogleLoginClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("Coming Soon", "Google login is not yet implemented.", "OK");
+    }
+    private async void OnAppleLoginClicked(object sender, EventArgs e)
+    {
+        await DisplayAlert("Coming Soon", "Apple ID login is not yet implemented.", "OK");
+    }
+
 }
