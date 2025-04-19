@@ -33,7 +33,7 @@ public partial class RegisterPage : ContentPage
         if (success)
         {
             await DisplayAlert("Success", "Account created successfully!", "OK");
-            await Navigation.PopAsync(); // Go back to MainPage after successful registration
+            await Navigation.PopModalAsync(); // Go back to MainPage after successful registration
         }
         else
         {

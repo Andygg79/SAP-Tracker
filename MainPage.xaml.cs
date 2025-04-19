@@ -20,16 +20,20 @@ public partial class MainPage : ContentPage
             return;
         }
 
-        if (email == "test@soldier.com" && password == "password123")
+        var authService = new FirebaseAuthService();
+        var (success, message) = await authService.LoginAsync(email, password);
+
+        if (success)
         {
             await DisplayAlert("Login Success", $"Welcome, {email}!", "Continue");
             await Navigation.PushAsync(new SelectionPage());
         }
         else
         {
-            await DisplayAlert("Login Failed", "Invalid credentials. Try again.", "OK");
+            await DisplayAlert("Login Failed", message, "Try again.");
         }
     }
+
 
     private async void OnCreateAccountClicked(object sender, EventArgs e)
     {
