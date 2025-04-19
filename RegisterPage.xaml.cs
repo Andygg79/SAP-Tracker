@@ -32,13 +32,21 @@ public partial class RegisterPage : ContentPage
 
         if (success)
         {
-            await DisplayAlert("Success", "Account created successfully!", "OK");
+            var firestoreService = new FirestoreService();
+            bool profileSaved = await firestoreService.SaveUserProfileAsync(email);
+
+            if (profileSaved)
+            {
+                await DisplayAlert("Success", "Account created and profile saved!", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Partial Success", "Account created but failed to save profile.", "OK");
+            }
+
             await Navigation.PopModalAsync(); // Go back to MainPage after successful registration
         }
-        else
-        {
-            await DisplayAlert("Registration Failed", message, "Try Again");
-        }
+
     }
 
     private async void OnBackClicked(object sender, EventArgs e)
