@@ -36,6 +36,14 @@
                 CornerRadius="10"
                 Clicked="OnAppleLoginClicked" />
 
+                <Button 
+                Text="Forgot Password?"
+                BackgroundColor="Transparent"
+                TextColor="Blue"
+                FontAttributes="Bold"
+                Clicked="OnForgotPasswordClicked"/>
+
+
             </VerticalStackLayout>
 
         </VerticalStackLayout>

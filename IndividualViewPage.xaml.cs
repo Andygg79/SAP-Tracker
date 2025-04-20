@@ -1,12 +1,18 @@
 ﻿using SAPTracker.Models;
 namespace SAPTracker;
+using SAPTracker.Services;
+
 
 public partial class IndividualViewPage : ContentPage
 {
     private Dictionary<string, MetricEntry> metrics = new();
-    public IndividualViewPage()
+    private string CurrentUserEmail = "";
+
+    public IndividualViewPage(string userEmail)
     {
         InitializeComponent();
+        CurrentUserEmail = userEmail;
+        LoadMetrics();
 
         // Initialize button states
         UpdateStatus(WeaponsDatePicker, WeaponsStatusButton, "Weapons");
@@ -22,7 +28,7 @@ public partial class IndividualViewPage : ContentPage
         UpdateStatus(EvalDatePicker, EvalStatusButton, "EVAL");
     }
 
-    private void OnMetricDateChanged(object sender, DateChangedEventArgs e)
+    private async void OnMetricDateChanged(object sender, DateChangedEventArgs e)
     {
         Button? statusButton = null;
         string metricName = "";
@@ -44,6 +50,13 @@ public partial class IndividualViewPage : ContentPage
             if (statusButton != null && metricName != "")
             {
                 UpdateStatus(datePicker, statusButton, metricName);
+                var firestoreService = new FirestoreService();
+                bool saved = await firestoreService.SaveMetricsAsync(CurrentUserEmail, metrics); // <-- we'll define CurrentUserEmail next
+
+                if (!saved)
+                {
+                    await DisplayAlert("Warning", "Failed to save metrics to server. Please check your connection.", "OK");
+                }
             }
         }
 
@@ -82,6 +95,71 @@ public partial class IndividualViewPage : ContentPage
             StatusColor = status
         };
     }
+    private async void LoadMetrics()
+    {
+        var firestoreService = new FirestoreService();
+        var loadedMetrics = await firestoreService.LoadMetricsAsync(CurrentUserEmail);
+
+        foreach (var metric in loadedMetrics)
+        {
+            if (metric.Key == "Weapons")
+            {
+                WeaponsDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(WeaponsDatePicker, WeaponsStatusButton, "Weapons");
+            }
+            else if (metric.Key == "Dental")
+            {
+                DentalDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(DentalDatePicker, DentalStatusButton, "Dental");
+            }
+            else if (metric.Key == "PHA")
+            {
+                PHADatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(PHADatePicker, PHAStatusButton, "PHA");
+            }
+            else if (metric.Key == "VISION")
+            {
+                VisionDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(VisionDatePicker, VisionStatusButton, "VISION");
+            }
+            else if (metric.Key == "HEARING")
+            {
+                HearingDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(HearingDatePicker, HearingStatusButton, "HEARING");
+            }
+            else if (metric.Key == "DD93")
+            {
+                DD93DatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(DD93DatePicker, DD93StatusButton, "DD93");
+            }
+            else if (metric.Key == "DA5960")
+            {
+                DA5960DatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(DA5960DatePicker, DA5960StatusButton, "DA5960");
+            }
+            else if (metric.Key == "PRR")
+            {
+                PRRDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(PRRDatePicker, PRRStatusButton, "PRR");
+            }
+            else if (metric.Key == "SGLV")
+            {
+                SGLVDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(SGLVDatePicker, SGLVStatusButton, "SGLV");
+            }
+            else if (metric.Key == "ARB")
+            {
+                ARBDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(ARBDatePicker, ARBStatusButton, "ARB");
+            }
+            else if (metric.Key == "EVAL")
+            {
+                EvalDatePicker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(EvalDatePicker, EvalStatusButton, "EVAL");
+            }
+        }
+    }
+
 
 
 }

@@ -71,5 +71,35 @@ namespace SAPTracker.Services
                 return (false, message ?? "Failed to login.");
             }
         }
+        public async Task<(bool Success, string Message)> SendPasswordResetEmailAsync(string email)
+        {
+            var requestData = new
+            {
+                requestType = "PASSWORD_RESET",
+                email
+            };
+
+            var json = JsonSerializer.Serialize(requestData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync(
+                $"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={apiKey}",
+                content
+            );
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                return (true, "Password reset email sent.");
+            }
+            else
+            {
+                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
+                var message = error.GetProperty("error").GetProperty("message").GetString();
+                return (false, message ?? "Failed to send reset email.");
+            }
+        }
+
     }
 }
