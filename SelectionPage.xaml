@@ -3,7 +3,7 @@
              x:Class="SAPTracker.SelectionPage"
              Title="Select User Type">
 
-    <VerticalStackLayout Padding="40" Spacing="25" VerticalOptions="Center">
+    <VerticalStackLayout Padding="40" Spacing="25" VerticalOptions="Start">
 
         <Label Text="User Type Selection"
                FontSize="28"
