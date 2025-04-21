@@ -121,6 +121,17 @@ public partial class TeamMetricsPage : ContentPage
         base.OnAppearing();
         await LoadTeamMembers();
     }
+    private async void OnTeamMemberSelected(object sender, SelectionChangedEventArgs e)
+    {
+        if (e.CurrentSelection.FirstOrDefault() is Teammate selectedSoldier)
+        {
+            await Navigation.PushAsync(new SoldierProfilePage(selectedSoldier.Email));
+        }
+
+    // Deselect after click
+    ((CollectionView)sender).SelectedItem = null;
+    }
+
 
 
 
