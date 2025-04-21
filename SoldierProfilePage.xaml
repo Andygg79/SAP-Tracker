@@ -7,14 +7,14 @@
         <VerticalStackLayout Padding="20" Spacing="15">
 
             <!-- Soldier Info Section -->
-            <Frame BorderColor="Black" CornerRadius="12" Padding="20" BackgroundColor="#EFEFEF">
+            <Border Stroke="Black" Padding="20" BackgroundColor="#EFEFEF">
                 <VerticalStackLayout Spacing="8">
                     <Label x:Name="NameLabel" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" />
                     <Label x:Name="RankLabel" FontSize="20" HorizontalOptions="Center" />
                     <Label x:Name="UnitLabel" FontSize="18" HorizontalOptions="Center" />
                     <Label x:Name="DutyTitleLabel" FontSize="18" HorizontalOptions="Center" />
                 </VerticalStackLayout>
-            </Frame>
+            </Border>
 
             <!-- Divider -->
             <BoxView HeightRequest="2" Color="Black" Margin="0,10,0,10" />

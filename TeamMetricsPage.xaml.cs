@@ -102,6 +102,21 @@ public partial class TeamMetricsPage : ContentPage
         AmberCountLabel.Text = $"🟠 Amber: {amber}";
         GreenCountLabel.Text = $"🟢 Green: {green}";
     }
+    private void CheckForAlerts()
+    {
+        int redCount = teamMembers.Count(t => t.StatusColor == "Red");
+        int amberCount = teamMembers.Count(t => t.StatusColor == "Amber");
+
+        if (redCount > 0 || amberCount > 0)
+        {
+            _ = DisplayAlert(
+                "⚠️ Team Readiness Warning",
+                $"🔴 Red: {redCount}\n🟠 Amber: {amberCount}\n\nImmediate action recommended.",
+                "OK"
+            );
+        }
+    }
+
 
     private async Task LoadTeamMembers()
     {
@@ -134,8 +149,8 @@ public partial class TeamMetricsPage : ContentPage
         RefreshTeamList();
         UpdateSummary();
         CheckForAlerts();
-
     }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -151,22 +166,4 @@ public partial class TeamMetricsPage : ContentPage
     // Deselect after click
     ((CollectionView)sender).SelectedItem = null;
     }
-
-    private void CheckForAlerts()
-    {
-        int redCount = teamMembers.Count(t => t.StatusColor == "Red");
-        int amberCount = teamMembers.Count(t => t.StatusColor == "Amber");
-
-        if (redCount > 0 || amberCount > 0)
-        {
-            DisplayAlert(
-                "⚠️ Team Readiness Warning",
-                $"Red: {redCount} | Amber: {amberCount}\nImmediate action recommended!",
-                "OK"
-            );
-        }
-    }
-
-
-
 }
