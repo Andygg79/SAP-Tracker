@@ -75,7 +75,7 @@ public partial class IndividualViewPage : ContentPage
         }
         else if (daysUntilExpiration <= 90)
         {
-            status = "YELLOW";
+            status = "AMBER";
             button.BackgroundColor = Colors.Gold;
         }
         else

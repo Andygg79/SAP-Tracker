@@ -209,6 +209,46 @@ namespace SAPTracker.Services
 
             return result;
         }
+        public async Task<(string firstName, string lastName)> GetUserProfileAsync(string email)
+        {
+            var safeEmailId = email.Replace(".", "_").Replace("@", "_");
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
+
+            var response = await httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+                return ("Unknown", "Soldier");
+
+            var json = await response.Content.ReadAsStringAsync();
+            var document = JsonDocument.Parse(json);
+
+            string firstName = "Unknown";
+            string lastName = "Soldier";
+
+            if (document.RootElement.TryGetProperty("fields", out JsonElement fields))
+            {
+                if (fields.TryGetProperty("firstName", out JsonElement fnField))
+                    firstName = fnField.GetProperty("stringValue").GetString() ?? "Unknown";
+
+                if (fields.TryGetProperty("lastName", out JsonElement lnField))
+                    lastName = lnField.GetProperty("stringValue").GetString() ?? "Soldier";
+            }
+
+            return (firstName, lastName);
+        }
+        public async Task<bool> RemoveTeamMemberAsync(string leaderEmail, string memberEmail)
+        {
+            var safeLeaderId = leaderEmail.Replace(".", "_").Replace("@", "_");
+            var safeMemberId = memberEmail.Replace(".", "_").Replace("@", "_");
+
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/leaders/{safeLeaderId}/teamMembers/{safeMemberId}";
+
+            var response = await httpClient.DeleteAsync(url);
+
+            return response.IsSuccessStatusCode;
+        }
+
+
 
 
 

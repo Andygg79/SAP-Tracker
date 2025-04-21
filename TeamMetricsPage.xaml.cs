@@ -5,7 +5,10 @@ public class Teammate
 {
     public string? Name { get; set; }
     public string? Email { get; set; }
+    public string StatusColor { get; set; } = "Gray"; // New field!
 }
+
+
 
 public partial class TeamMetricsPage : ContentPage
 {
@@ -17,8 +20,6 @@ public partial class TeamMetricsPage : ContentPage
     {
         InitializeComponent();
         CurrentUserEmail = userEmail;
-
-        LoadTeamMembers();
     }
 
 
@@ -51,17 +52,35 @@ public partial class TeamMetricsPage : ContentPage
     {
         string email = await DisplayPromptAsync("Remove Member", "Enter email to remove:");
 
+        if (string.IsNullOrWhiteSpace(email))
+            return;
+
         var soldier = teamMembers.FirstOrDefault(t => t.Email == email);
         if (soldier != null)
         {
+            // Remove from local list
             teamMembers.Remove(soldier);
             RefreshTeamList();
+
+            // Remove from Firestore
+            var firestoreService = new FirestoreService();
+            bool success = await firestoreService.RemoveTeamMemberAsync(CurrentUserEmail, email);
+
+            if (success)
+            {
+                await DisplayAlert("Success", "Team member removed successfully!", "OK");
+            }
+            else
+            {
+                await DisplayAlert("Error", "Failed to remove from database.", "OK");
+            }
         }
         else
         {
             await DisplayAlert("Not Found", "No team member with that email.", "OK");
         }
     }
+
 
     private void RefreshTeamList()
     {
@@ -71,15 +90,38 @@ public partial class TeamMetricsPage : ContentPage
     private async Task LoadTeamMembers()
     {
         var firestoreService = new FirestoreService();
-        var members = await firestoreService.GetTeamMembersAsync(CurrentUserEmail);
+        var memberEmails = await firestoreService.GetTeamMembersAsync(CurrentUserEmail);
 
         teamMembers.Clear();
-        foreach (var memberEmail in members)
+        foreach (var memberEmail in memberEmails)
         {
-            teamMembers.Add(new Teammate { Name = "Unknown Soldier", Email = memberEmail });
+            var (firstName, lastName) = await firestoreService.GetUserProfileAsync(memberEmail);
+            var metrics = await firestoreService.LoadMetricsAsync(memberEmail);
+
+            string overallColor = "Green"; // Start assuming best
+
+            if (metrics.Any(m => m.Value.StatusColor == "RED"))
+                overallColor = "Red";
+            else if (metrics.Any(m => m.Value.StatusColor == "AMBER"))
+                overallColor = "Gold";
+
+            teamMembers.Add(new Teammate
+            {
+                Name = $"{firstName} {lastName}",
+                Email = memberEmail,
+                StatusColor = overallColor
+            });
+
         }
 
         RefreshTeamList();
     }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadTeamMembers();
+    }
+
+
 
 }
