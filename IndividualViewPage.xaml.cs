@@ -56,6 +56,8 @@ public partial class IndividualViewPage : ContentPage
                 if (!saved)
                 {
                     await DisplayAlert("Warning", "Failed to save metrics to server. Please check your connection.", "OK");
+                    await CheckIndividualAlertsAsync();
+
                 }
             }
         }
@@ -159,6 +161,21 @@ public partial class IndividualViewPage : ContentPage
             }
         }
     }
+    private async Task CheckIndividualAlertsAsync()
+    {
+        bool hasRed = metrics.Values.Any(m => m.StatusColor == "RED");
+        bool hasAmber = metrics.Values.Any(m => m.StatusColor == "AMBER");
+
+        if (hasRed)
+        {
+            await DisplayAlert("⚠️ Critical Alert", "One or more of your metrics is RED. Immediate action is needed!", "OK");
+        }
+        else if (hasAmber)
+        {
+            await DisplayAlert("⚠️ Warning Alert", "One or more of your metrics is AMBER. Plan to update soon!", "OK");
+        }
+    }
+
 
 
 
