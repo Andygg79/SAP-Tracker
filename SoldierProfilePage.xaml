@@ -6,18 +6,35 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <!-- Soldier Info -->
-            <Label x:Name="NameLabel" FontSize="24" FontAttributes="Bold" />
-            <Label x:Name="RankLabel" FontSize="18" />
-            <Label x:Name="UnitLabel" FontSize="18" />
-            <Label x:Name="DutyTitleLabel" FontSize="18" />
+            <!-- Soldier Basic Info -->
+            <Label x:Name="NameLabel" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label x:Name="RankLabel" FontSize="18" HorizontalOptions="Center" />
+            <Label x:Name="UnitLabel" FontSize="18" HorizontalOptions="Center" />
+            <Label x:Name="DutyTitleLabel" FontSize="18" HorizontalOptions="Center" />
 
             <!-- Divider -->
             <BoxView HeightRequest="2" Color="Black" Margin="0,10,0,10" />
 
-            <!-- Metrics List -->
-            <Label Text="Metrics:" FontSize="20" FontAttributes="Bold" />
-            <CollectionView x:Name="MetricsList" />
+            <!-- Metrics Section -->
+            <CollectionView x:Name="MetricsList" x:DataType="x:Object">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Black" CornerRadius="8" Padding="10" Margin="5">
+                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                <BoxView WidthRequest="20" HeightRequest="20"
+                                         Color="{Binding Status}"
+                                         CornerRadius="10" />
+
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding MetricName}" FontSize="18" FontAttributes="Bold" />
+                                    <Label Text="{Binding LastUpdate}" FontSize="14" TextColor="Gray" />
+                                </VerticalStackLayout>
+
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
         </VerticalStackLayout>
     </ScrollView>

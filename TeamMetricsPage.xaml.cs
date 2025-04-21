@@ -123,7 +123,7 @@ public partial class TeamMetricsPage : ContentPage
     }
     private async void OnTeamMemberSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Teammate selectedSoldier)
+        if (e.CurrentSelection.FirstOrDefault() is Teammate selectedSoldier && !string.IsNullOrWhiteSpace(selectedSoldier.Email))
         {
             await Navigation.PushAsync(new SoldierProfilePage(selectedSoldier.Email));
         }

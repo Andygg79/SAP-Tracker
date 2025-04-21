@@ -29,8 +29,15 @@ public partial class SoldierProfilePage : ContentPage
         MetricsList.ItemsSource = metrics.Select(m => new
         {
             MetricName = m.Key,
-            Status = m.Value.StatusColor,
+            Status = m.Value.StatusColor.ToUpper() switch
+            {
+                "RED" => Colors.Red,
+                "AMBER" => Colors.Gold,
+                "GREEN" => Colors.Green,
+                _ => Colors.Gray
+            },
             LastUpdate = m.Value.LastUpdatedDate.ToString("yyyy-MM-dd")
         }).ToList();
+
     }
 }
