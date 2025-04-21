@@ -1,4 +1,4 @@
-using SAPTracker.Services;
+﻿using SAPTracker.Services;
 namespace SAPTracker;
 
 public class Teammate
@@ -62,6 +62,8 @@ public partial class TeamMetricsPage : ContentPage
             teamMembers.Remove(soldier);
             RefreshTeamList();
 
+
+
             // Remove from Firestore
             var firestoreService = new FirestoreService();
             bool success = await firestoreService.RemoveTeamMemberAsync(CurrentUserEmail, email);
@@ -82,11 +84,25 @@ public partial class TeamMetricsPage : ContentPage
     }
 
 
+
     private void RefreshTeamList()
     {
         TeamList.ItemsSource = null;
         TeamList.ItemsSource = teamMembers;
     }
+    private void UpdateSummary()
+    {
+        int total = teamMembers.Count;
+        int red = teamMembers.Count(t => t.StatusColor == "Red");
+        int amber = teamMembers.Count(t => t.StatusColor == "Amber");
+        int green = teamMembers.Count(t => t.StatusColor == "Green");
+
+        TotalSoldiersLabel.Text = $"🪖 Total Soldiers: {total}";
+        RedCountLabel.Text = $"🔴 Red: {red}";
+        AmberCountLabel.Text = $"🟠 Amber: {amber}";
+        GreenCountLabel.Text = $"🟢 Green: {green}";
+    }
+
     private async Task LoadTeamMembers()
     {
         var firestoreService = new FirestoreService();
@@ -111,10 +127,12 @@ public partial class TeamMetricsPage : ContentPage
                 Email = memberEmail,
                 StatusColor = overallColor
             });
+            
 
         }
 
         RefreshTeamList();
+        UpdateSummary();
     }
     protected override async void OnAppearing()
     {

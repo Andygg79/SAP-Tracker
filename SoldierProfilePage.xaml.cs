@@ -21,11 +21,15 @@ public partial class SoldierProfilePage : ContentPage
         var metrics = await firestoreService.LoadMetricsAsync(SoldierEmail);
 
         NameLabel.Text = $"{firstName} {lastName}";
-        RankLabel.Text = $"Rank: {firstName}";  // TODO: Replace with real rank from profile if available
-        UnitLabel.Text = $"Unit: {firstName}";  // TODO: Replace with real unit if available
-        DutyTitleLabel.Text = $"Duty Title: {firstName}";  // TODO: Replace with real duty title
 
-        // Populate Metrics List
+        // Fetch full profile fields
+        var profile = await firestoreService.GetFullUserProfileAsync(SoldierEmail);
+
+        RankLabel.Text = $"Rank: {profile.Rank ?? "Unknown"}";
+        UnitLabel.Text = $"Unit: {profile.Unit ?? "Unknown"}";
+        DutyTitleLabel.Text = $"Duty Title: {profile.DutyTitle ?? "Unknown"}";
+
+        // Metrics
         MetricsList.ItemsSource = metrics.Select(m => new
         {
             MetricName = m.Key,
@@ -38,6 +42,6 @@ public partial class SoldierProfilePage : ContentPage
             },
             LastUpdate = m.Value.LastUpdatedDate.ToString("yyyy-MM-dd")
         }).ToList();
-
     }
+
 }

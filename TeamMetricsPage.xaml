@@ -29,6 +29,19 @@
                FontAttributes="Bold"
                HorizontalOptions="Center"
                Margin="0,15,0,0" />
+        
+        
+        <!-- Team Readiness Summary -->
+        <Frame BorderColor="Black" BackgroundColor="#EFEFEF" CornerRadius="12" Padding="15">
+            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
+                <Label x:Name="TotalSoldiersLabel" FontSize="20" FontAttributes="Bold" />
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                    <Label x:Name="RedCountLabel" TextColor="Red" FontSize="18" />
+                    <Label x:Name="AmberCountLabel" TextColor="Gold" FontSize="18" />
+                    <Label x:Name="GreenCountLabel" TextColor="Green" FontSize="18" />
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
 
         <!-- Team List -->
         <CollectionView x:Name="TeamList"

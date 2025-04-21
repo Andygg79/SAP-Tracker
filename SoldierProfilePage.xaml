@@ -6,17 +6,28 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="15">
 
-            <!-- Soldier Basic Info -->
-            <Label x:Name="NameLabel" FontSize="24" FontAttributes="Bold" HorizontalOptions="Center" />
-            <Label x:Name="RankLabel" FontSize="18" HorizontalOptions="Center" />
-            <Label x:Name="UnitLabel" FontSize="18" HorizontalOptions="Center" />
-            <Label x:Name="DutyTitleLabel" FontSize="18" HorizontalOptions="Center" />
+            <!-- Soldier Info Section -->
+            <Frame BorderColor="Black" CornerRadius="12" Padding="20" BackgroundColor="#EFEFEF">
+                <VerticalStackLayout Spacing="8">
+                    <Label x:Name="NameLabel" FontSize="28" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label x:Name="RankLabel" FontSize="20" HorizontalOptions="Center" />
+                    <Label x:Name="UnitLabel" FontSize="18" HorizontalOptions="Center" />
+                    <Label x:Name="DutyTitleLabel" FontSize="18" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+            </Frame>
 
             <!-- Divider -->
             <BoxView HeightRequest="2" Color="Black" Margin="0,10,0,10" />
 
-            <!-- Metrics Section -->
-            <CollectionView x:Name="MetricsList" x:DataType="x:Object">
+            <!-- Metrics Section Title -->
+            <Label Text="Readiness Metrics"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   Margin="0,10,0,10" />
+
+            <!-- Metrics List -->
+            <CollectionView x:Name="MetricsList">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame BorderColor="Black" CornerRadius="8" Padding="10" Margin="5">
@@ -29,7 +40,6 @@
                                     <Label Text="{Binding MetricName}" FontSize="18" FontAttributes="Bold" />
                                     <Label Text="{Binding LastUpdate}" FontSize="14" TextColor="Gray" />
                                 </VerticalStackLayout>
-
                             </HorizontalStackLayout>
                         </Frame>
                     </DataTemplate>

@@ -247,12 +247,45 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+        public async Task<(string FirstName, string LastName, string Rank, string Unit, string DutyTitle)> GetFullUserProfileAsync(string email)
+        {
+            var safeEmailId = email.Replace(".", "_").Replace("@", "_");
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
 
+            var response = await httpClient.GetAsync(url);
 
+            if (!response.IsSuccessStatusCode)
+                return ("Unknown", "Unknown", "Unknown", "Unknown", "Unknown");
 
+            var json = await response.Content.ReadAsStringAsync();
+            var document = JsonDocument.Parse(json);
 
+            string firstName = "Unknown";
+            string lastName = "Unknown";
+            string rank = "Unknown";
+            string unit = "Unknown";
+            string dutyTitle = "Unknown";
 
+            if (document.RootElement.TryGetProperty("fields", out JsonElement fields))
+            {
+                if (fields.TryGetProperty("firstName", out var firstNameField))
+                    firstName = firstNameField.GetProperty("stringValue").GetString() ?? "Unknown";
 
+                if (fields.TryGetProperty("lastName", out var lastNameField))
+                    lastName = lastNameField.GetProperty("stringValue").GetString() ?? "Unknown";
+
+                if (fields.TryGetProperty("rank", out var rankField))
+                    rank = rankField.GetProperty("stringValue").GetString() ?? "Unknown";
+
+                if (fields.TryGetProperty("unit", out var unitField))
+                    unit = unitField.GetProperty("stringValue").GetString() ?? "Unknown";
+
+                if (fields.TryGetProperty("dutyTitle", out var dutyTitleField))
+                    dutyTitle = dutyTitleField.GetProperty("stringValue").GetString() ?? "Unknown";
+            }
+
+            return (firstName, lastName, rank, unit, dutyTitle);
+        }
 
     }
 }
