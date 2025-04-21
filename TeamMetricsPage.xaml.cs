@@ -133,6 +133,8 @@ public partial class TeamMetricsPage : ContentPage
 
         RefreshTeamList();
         UpdateSummary();
+        CheckForAlerts();
+
     }
     protected override async void OnAppearing()
     {
@@ -150,6 +152,20 @@ public partial class TeamMetricsPage : ContentPage
     ((CollectionView)sender).SelectedItem = null;
     }
 
+    private void CheckForAlerts()
+    {
+        int redCount = teamMembers.Count(t => t.StatusColor == "Red");
+        int amberCount = teamMembers.Count(t => t.StatusColor == "Amber");
+
+        if (redCount > 0 || amberCount > 0)
+        {
+            DisplayAlert(
+                "⚠️ Team Readiness Warning",
+                $"Red: {redCount} | Amber: {amberCount}\nImmediate action recommended!",
+                "OK"
+            );
+        }
+    }
 
 
 
