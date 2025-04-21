@@ -33,6 +33,30 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+        public async Task<bool> CheckProfileCompleteAsync(string email)
+        {
+            var safeEmailId = email.Replace(".", "_").Replace("@", "_");
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
+
+            var response = await httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+                return false; // Assume incomplete if can't read
+
+            var json = await response.Content.ReadAsStringAsync();
+            var document = JsonDocument.Parse(json);
+
+            if (document.RootElement.TryGetProperty("fields", out JsonElement fields))
+            {
+                if (fields.TryGetProperty("profileComplete", out JsonElement profileCompleteField))
+                {
+                    return profileCompleteField.GetProperty("booleanValue").GetBoolean();
+                }
+            }
+
+            return false;
+        }
+
         public async Task<bool> SaveMetricsAsync(string email, Dictionary<string, MetricEntry> metrics)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
@@ -104,6 +128,33 @@ namespace SAPTracker.Services
 
             return result;
         }
+        public async Task<bool> SaveProfileAsync(string email, string firstName, string lastName, string rank, string unit, string dutyTitle)
+        {
+            var safeEmailId = email.Replace(".", "_").Replace("@", "_");
+            var documentPath = $"projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
+            var url = $"https://firestore.googleapis.com/v1/{documentPath}?updateMask.fieldPaths=firstName&updateMask.fieldPaths=lastName&updateMask.fieldPaths=rank&updateMask.fieldPaths=unit&updateMask.fieldPaths=dutyTitle&updateMask.fieldPaths=profileComplete";
+
+            var requestData = new
+            {
+                fields = new
+                {
+                    firstName = new { stringValue = firstName },
+                    lastName = new { stringValue = lastName },
+                    rank = new { stringValue = rank },
+                    unit = new { stringValue = unit },
+                    dutyTitle = new { stringValue = dutyTitle },
+                    profileComplete = new { booleanValue = true }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(requestData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PatchAsync(url, content);
+
+            return response.IsSuccessStatusCode;
+        }
+
 
 
     }

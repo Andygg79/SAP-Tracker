@@ -26,14 +26,20 @@ public partial class MainPage : ContentPage
         if (success)
         {
             await DisplayAlert("Login Success", $"Welcome, {email}!", "Continue");
-            await Navigation.PushAsync(new SelectionPage(email));
-         }
-        else
-        {
-            await DisplayAlert("Login Failed", message, "Try again.");
+
+            var firestoreService = new FirestoreService();
+            bool profileComplete = await firestoreService.CheckProfileCompleteAsync(email);
+
+            if (profileComplete)
+            {
+                await Navigation.PushAsync(new SelectionPage(email));
+            }
+            else
+            {
+                await Navigation.PushAsync(new ProfilePage(email));
+            }
         }
     }
-
 
 
     private async void OnCreateAccountClicked(object sender, EventArgs e)

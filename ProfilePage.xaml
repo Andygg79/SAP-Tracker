@@ -1,0 +1,25 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SAPTracker.ProfilePage"
+             Title="Complete Your Profile">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="Complete Your Profile" FontSize="24" HorizontalOptions="Center" />
+
+            <Entry x:Name="FirstNameEntry" Placeholder="First Name" />
+            <Entry x:Name="LastNameEntry" Placeholder="Last Name" />
+            <Entry x:Name="RankEntry" Placeholder="Rank (e.g., SGT)" />
+            <Entry x:Name="UnitEntry" Placeholder="Unit (e.g., 410th CAB)" />
+            <Entry x:Name="DutyTitleEntry" Placeholder="Duty Title (e.g., Team Sergeant)" />
+
+            <Button Text="Save Profile" 
+                    BackgroundColor="Green" 
+                    TextColor="White" 
+                    Clicked="OnSaveProfileClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
