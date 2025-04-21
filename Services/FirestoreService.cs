@@ -154,6 +154,63 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+        public async Task<bool> AddTeamMemberAsync(string leaderEmail, string memberEmail)
+        {
+            var safeLeaderId = leaderEmail.Replace(".", "_").Replace("@", "_");
+            var safeMemberId = memberEmail.Replace(".", "_").Replace("@", "_");
+
+            var documentPath = $"projects/{projectId}/databases/(default)/documents/leaders/{safeLeaderId}/teamMembers/{safeMemberId}";
+            var url = $"https://firestore.googleapis.com/v1/{documentPath}";
+
+            var requestData = new
+            {
+                fields = new
+                {
+                    email = new { stringValue = memberEmail }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(requestData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PatchAsync(url, content);
+
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<List<string>> GetTeamMembersAsync(string leaderEmail)
+        {
+            var safeLeaderId = leaderEmail.Replace(".", "_").Replace("@", "_");
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/leaders/{safeLeaderId}/teamMembers";
+
+            var response = await httpClient.GetAsync(url);
+            var result = new List<string>();
+
+            if (!response.IsSuccessStatusCode)
+                return result;
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var jsonDoc = JsonDocument.Parse(responseString);
+
+            if (jsonDoc.RootElement.TryGetProperty("documents", out JsonElement documents))
+            {
+                foreach (var doc in documents.EnumerateArray())
+                {
+                    if (doc.TryGetProperty("fields", out var fields))
+                    {
+                        if (fields.TryGetProperty("email", out var emailField))
+                        {
+                            var email = emailField.GetProperty("stringValue").GetString();
+                            if (!string.IsNullOrWhiteSpace(email))
+                                result.Add(email);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
 
 
 

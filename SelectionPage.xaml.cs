@@ -19,6 +19,6 @@ public partial class SelectionPage : ContentPage
 
     private async void OnTeamClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new TeamMetricsPage());
+        await Navigation.PushAsync(new TeamMetricsPage(CurrentUserEmail));
     }
 }
