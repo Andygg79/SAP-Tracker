@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "442299156516",
+    "project_id": "sapt-24jk2y",
+    "storage_bucket": "sapt-24jk2y.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442299156516:android:3fe530ddef3fb5e4a830b1",
+        "android_client_info": {
+          "package_name": "com.mycompany.saptracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442299156516-lb52fcpp0gatopotkgk6do7kejgvsof7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mycompany.saptracker",
+            "certificate_hash": "0244eb47ddce6c9445bff818706850842458fac1"
+          }
+        },
+        {
+          "client_id": "442299156516-753eft2sj3t1ia6ihk6082f696jtn731.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCn6iinPpFDiphveUBX4FwcgBpLAkg0NJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442299156516-753eft2sj3t1ia6ihk6082f696jtn731.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "442299156516-b8jp3cgak8m3ast2graveccj37ehj6ep.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mycompany.saptracker"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

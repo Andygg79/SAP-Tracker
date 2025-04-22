@@ -134,7 +134,7 @@ public partial class TeamMetricsPage : ContentPage
             if (metrics.Any(m => m.Value.StatusColor == "RED"))
                 overallColor = "Red";
             else if (metrics.Any(m => m.Value.StatusColor == "AMBER"))
-                overallColor = "Gold";
+                overallColor = "Amber";
 
             teamMembers.Add(new Teammate
             {

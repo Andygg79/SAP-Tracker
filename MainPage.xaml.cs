@@ -1,4 +1,8 @@
-﻿using SAPTracker.Services;
+﻿using Android.Content.Res;
+using Microsoft.Maui.Controls;
+using SAPTracker.Services;
+
+
 
 namespace SAPTracker;
 
@@ -36,7 +40,7 @@ public partial class MainPage : ContentPage
             }
             else
             {
-                await Navigation.PushAsync(new ProfilePage(email));
+                await Navigation.PushAsync(new SelectionPage(email));// (Temproary for now!)
             }
         }
     }
@@ -48,8 +52,23 @@ public partial class MainPage : ContentPage
     }
     private async void OnGoogleLoginClicked(object sender, EventArgs e)
     {
-        await DisplayAlert("Coming Soon", "Google login is not yet implemented.", "OK");
+        var googleAuth = new GoogleAuthService();
+        var (success, message) = await googleAuth.LoginWithGoogleAsync();
+
+        if (success)
+        {
+            await DisplayAlert("Login Success", "You logged in with Google!", "Continue");
+            await Navigation.PushAsync(new SelectionPage("temp@email.com"));// <-- later we can pass real email
+        }
+        else
+        {
+            await DisplayAlert("Login Failed", message, "OK");
+        }
     }
+
+
+
+
     private async void OnAppleLoginClicked(object sender, EventArgs e)
     {
         await DisplayAlert("Coming Soon", "Apple ID login is not yet implemented.", "OK");

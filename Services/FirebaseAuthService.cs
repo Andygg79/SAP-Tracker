@@ -6,7 +6,7 @@ namespace SAPTracker.Services
 {
     public class FirebaseAuthService
     {
-        private readonly string apiKey = "AIzaSyCn6iinPpFDiphveUBX4FwcgBpLAkg0NJk";
+        private readonly string apiKey = "AIzaSyCn6iinPpFDiphveUBX4FwcgBpLAkg0NJk"; // ✅ Your real key
         private readonly HttpClient httpClient = new();
 
         public async Task<(bool Success, string Message)> RegisterAsync(string email, string password)
@@ -40,7 +40,6 @@ namespace SAPTracker.Services
             }
         }
 
-        // 🧩 Make sure you have THIS LoginAsync method too:
         public async Task<(bool Success, string Message)> LoginAsync(string email, string password)
         {
             var requestData = new
@@ -71,6 +70,7 @@ namespace SAPTracker.Services
                 return (false, message ?? "Failed to login.");
             }
         }
+
         public async Task<(bool Success, string Message)> SendPasswordResetEmailAsync(string email)
         {
             var requestData = new
@@ -98,6 +98,38 @@ namespace SAPTracker.Services
                 var error = JsonSerializer.Deserialize<JsonElement>(responseString);
                 var message = error.GetProperty("error").GetProperty("message").GetString();
                 return (false, message ?? "Failed to send reset email.");
+            }
+        }
+
+        // ⭐ ADD THIS GOOGLE LOGIN METHOD:
+        public async Task<(bool Success, string Message)> LoginWithGoogleAsync(string idToken)
+        {
+            var requestData = new
+            {
+                postBody = $"id_token={idToken}&providerId=google.com",
+                requestUri = "http://localhost",
+                returnSecureToken = true
+            };
+
+            var json = JsonSerializer.Serialize(requestData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PostAsync(
+                $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key={apiKey}",
+                content
+            );
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            if (response.IsSuccessStatusCode)
+            {
+                return (true, "Google login successful!");
+            }
+            else
+            {
+                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
+                var message = error.GetProperty("error").GetProperty("message").GetString();
+                return (false, message ?? "Failed to login with Google.");
             }
         }
 

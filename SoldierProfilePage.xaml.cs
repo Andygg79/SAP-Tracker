@@ -1,3 +1,4 @@
+using System.Xml;
 using SAPTracker.Services;
 
 namespace SAPTracker;
@@ -36,7 +37,7 @@ public partial class SoldierProfilePage : ContentPage
             Status = m.Value.StatusColor.ToUpper() switch
             {
                 "RED" => Colors.Red,
-                "AMBER" => Colors.Gold,
+                "AMBER" => Colors.LightCoral,
                 "GREEN" => Colors.Green,
                 _ => Colors.Gray
             },

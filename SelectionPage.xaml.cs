@@ -5,10 +5,10 @@ namespace SAPTracker;
 public partial class SelectionPage : ContentPage
 {
     private string CurrentUserEmail = "";
-    public SelectionPage(string userEmail)
+    public SelectionPage(string email)
     {
         InitializeComponent();
-        CurrentUserEmail = userEmail;
+        CurrentUserEmail = email;
     }
 
 
