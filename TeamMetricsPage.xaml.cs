@@ -142,7 +142,7 @@ public partial class TeamMetricsPage : ContentPage
                 Email = memberEmail,
                 StatusColor = overallColor
             });
-            
+
 
         }
 

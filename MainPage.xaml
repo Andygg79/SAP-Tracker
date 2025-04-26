@@ -14,39 +14,7 @@
             <Button Text="Login" Clicked="OnLoginClicked" />
             <Button Text="Create Account" Clicked="OnCreateAccountClicked" />
 
-            <!-- OR Separator -->
-            <HorizontalStackLayout VerticalOptions="Center" Margin="0,0,0,0" Spacing="10">
-                <BoxView Color="Gray" HeightRequest="1" WidthRequest="100" VerticalOptions="Center" />
-                <Label Text="OR" FontSize="16" VerticalOptions="Center" />
-                <BoxView Color="Gray" HeightRequest="1" WidthRequest="100" VerticalOptions="Center" />
-            </HorizontalStackLayout>
-
-            <!-- Social Login Buttons -->
-            <VerticalStackLayout Spacing="10" Margin="0,10,0,0">
-
-                <Button Text="Login with Google"
-                BackgroundColor="#DB4437"
-                TextColor="White"
-                CornerRadius="10"
-                Clicked="OnGoogleLoginClicked" />
-
-                <Button Text="Login with Apple"
-                BackgroundColor="Black"
-                TextColor="White"
-                CornerRadius="10"
-                Clicked="OnAppleLoginClicked" />
-
-                <Button 
-                Text="Forgot Password?"
-                BackgroundColor="Transparent"
-                TextColor="Blue"
-                FontAttributes="Bold"
-                Clicked="OnForgotPasswordClicked"/>
-
-
-            </VerticalStackLayout>
-
         </VerticalStackLayout>
-
     </ScrollView>
+
 </ContentPage>

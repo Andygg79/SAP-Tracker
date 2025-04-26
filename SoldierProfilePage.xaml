@@ -1,10 +1,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SAPTracker.Models"
              x:Class="SAPTracker.SoldierProfilePage"
              Title="Soldier Profile">
 
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout x:DataType="local:MetricEntry">
+            <BoxView WidthRequest="20" HeightRequest="20"
+                     Color="{Binding StatusColor}"
+                     CornerRadius="10" />
 
             <!-- Soldier Info Section -->
             <Border Stroke="Black" Padding="20" BackgroundColor="#EFEFEF">
@@ -31,14 +35,14 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Frame BorderColor="Black" CornerRadius="8" Padding="10" Margin="5">
-                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
-                                <BoxView WidthRequest="20" HeightRequest="20"
-                                         Color="{Binding Status}"
-                                         CornerRadius="10" />
+                            <HorizontalStackLayout x:DataType="local:MetricEntry" Spacing="10" VerticalOptions="Center">
+                                <BoxView x:DataType="local:MetricEntry" WidthRequest="20" HeightRequest="20"
+                                    Color="{Binding StatusColor}"
+                                    CornerRadius="10" />
 
-                                <VerticalStackLayout>
-                                    <Label Text="{Binding MetricName}" FontSize="18" FontAttributes="Bold" />
-                                    <Label Text="{Binding LastUpdate}" FontSize="14" TextColor="Gray" />
+                                <VerticalStackLayout x:DataType="local:MetricEntry">
+                                    <Label Text="{Binding MetricName}" />
+                                    <Label Text="{Binding LastUpdatedDate}" />
                                 </VerticalStackLayout>
                             </HorizontalStackLayout>
                         </Frame>
