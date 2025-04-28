@@ -49,4 +49,9 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushModalAsync(new RegisterPage());
     }
+    private async void OnForgotPasswordClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushModalAsync(new ForgotPasswordPage());
+    }
+
 }

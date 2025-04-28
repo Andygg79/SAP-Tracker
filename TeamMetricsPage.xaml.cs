@@ -12,14 +12,14 @@ public class Teammate
 
 public partial class TeamMetricsPage : ContentPage
 {
-    private string CurrentUserEmail = "";
+    private string CurrentUserId = "";
     private List<Teammate> teamMembers = new();
 
 
     public TeamMetricsPage(string userEmail)
     {
         InitializeComponent();
-        CurrentUserEmail = userEmail;
+        CurrentUserId = userEmail;
     }
 
 
@@ -34,7 +34,7 @@ public partial class TeamMetricsPage : ContentPage
             return;
 
         var firestoreService = new FirestoreService();
-        bool success = await firestoreService.AddTeamMemberAsync(CurrentUserEmail, newMemberEmail);
+        bool success = await firestoreService.AddTeamMemberAsync(CurrentUserId, newMemberEmail);
 
         if (success)
         {
@@ -66,7 +66,7 @@ public partial class TeamMetricsPage : ContentPage
 
             // Remove from Firestore
             var firestoreService = new FirestoreService();
-            bool success = await firestoreService.RemoveTeamMemberAsync(CurrentUserEmail, email);
+            bool success = await firestoreService.RemoveTeamMemberAsync(CurrentUserId, email);
 
             if (success)
             {
@@ -121,7 +121,7 @@ public partial class TeamMetricsPage : ContentPage
     private async Task LoadTeamMembers()
     {
         var firestoreService = new FirestoreService();
-        var memberEmails = await firestoreService.GetTeamMembersAsync(CurrentUserEmail);
+        var memberEmails = await firestoreService.GetTeamMembersAsync(CurrentUserId);
 
         teamMembers.Clear();
         foreach (var memberEmail in memberEmails)

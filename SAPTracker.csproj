@@ -37,6 +37,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<MauiXaml Update="ForgotPasswordPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="IndividualViewPage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="ProfilePage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="RegisterPage.xaml" Generator="MSBuild:Compile" />

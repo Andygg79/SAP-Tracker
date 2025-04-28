@@ -13,6 +13,18 @@
             <!-- Main Login Buttons -->
             <Button Text="Login" Clicked="OnLoginClicked" />
             <Button Text="Create Account" Clicked="OnCreateAccountClicked" />
+            
+            <!-- Forgot Password -->
+            <Button 
+                Text="Forgot Password?" 
+                Clicked="OnForgotPasswordClicked" 
+                BackgroundColor="Transparent" 
+                TextColor="Blue"
+                FontAttributes="Italic"
+                FontSize="14"
+                HorizontalOptions="Center"
+                />
+
 
         </VerticalStackLayout>
     </ScrollView>
