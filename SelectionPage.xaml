@@ -27,6 +27,15 @@
                 HeightRequest="50"
                 WidthRequest="200"
                 HorizontalOptions="Center" />
+        <Button Text="Logout"
+                Clicked="OnLogoutClicked"
+                BackgroundColor="#FF3B30"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                WidthRequest="200"
+                HorizontalOptions="Center" />
+
 
     </VerticalStackLayout>
 </ContentPage>

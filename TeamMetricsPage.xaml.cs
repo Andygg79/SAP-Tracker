@@ -21,6 +21,22 @@ public partial class TeamMetricsPage : ContentPage
         InitializeComponent();
         CurrentUserId = userEmail;
     }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (!SessionService.IsLoggedIn)
+        {
+            await DisplayAlert("Session Expired", "Please login again.", "OK");
+            await Navigation.PopToRootAsync(); // Return to MainPage
+            return; // Important: Stop execution if not logged in!
+        }
+
+        await LoadTeamMembers();
+    }
+
+
+
 
 
     private async void OnAddMemberClicked(object sender, EventArgs e)
@@ -150,12 +166,6 @@ public partial class TeamMetricsPage : ContentPage
         UpdateSummary();
         CheckForAlerts();
     }
-
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-        await LoadTeamMembers();
-    }
     private async void OnTeamMemberSelected(object sender, SelectionChangedEventArgs e)
     {
         if (e.CurrentSelection.FirstOrDefault() is Teammate selectedSoldier && !string.IsNullOrWhiteSpace(selectedSoldier.Email))
@@ -166,4 +176,7 @@ public partial class TeamMetricsPage : ContentPage
     // Deselect after click
     ((CollectionView)sender).SelectedItem = null;
     }
+
+
+
 }

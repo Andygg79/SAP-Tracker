@@ -5,7 +5,21 @@ namespace SAPTracker.Services
 {
     public class FirebaseAuthService
     {
-        private readonly string apiKey = "AIzaSyCn6iinPpFDiphveUBX4FwcgBpLAkg0NJk"; // ✅ Your real key
+        private readonly string apiKey;
+
+        public FirebaseAuthService()
+        {
+            var settingsPath = Path.Combine(FileSystem.AppDataDirectory, "appsettings.json");
+
+            if (!File.Exists(settingsPath))
+                throw new Exception("appsettings.json not found in app directory.");
+
+            var json = File.ReadAllText(settingsPath);
+            var settings = JsonSerializer.Deserialize<Models.AppSettings>(json);
+
+            apiKey = settings?.FirebaseApiKey ?? throw new Exception("Firebase API Key missing from appsettings.json.");
+        }
+
         private readonly HttpClient httpClient = new();
 
         public async Task<(bool Success, string Message)> RegisterAsync(string email, string password)

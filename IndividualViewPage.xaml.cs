@@ -12,7 +12,7 @@ public partial class IndividualViewPage : ContentPage
     {
         InitializeComponent();
         CurrentUserEmail = userEmail;
-        LoadMetrics();
+
 
         // Initialize button states
         UpdateStatus(WeaponsDatePicker, WeaponsStatusButton, "Weapons");
@@ -26,7 +26,9 @@ public partial class IndividualViewPage : ContentPage
         UpdateStatus(SGLVDatePicker, SGLVStatusButton, "SGLV");
         UpdateStatus(ARBDatePicker, ARBStatusButton, "ARB");
         UpdateStatus(EvalDatePicker, EvalStatusButton, "EVAL");
-    }
+    }    
+
+
 
     private async void OnMetricDateChanged(object sender, DateChangedEventArgs e)
     {
@@ -97,7 +99,7 @@ public partial class IndividualViewPage : ContentPage
             StatusColor = status
         };
     }
-    private async void LoadMetrics()
+    private async Task LoadMetrics()
     {
         var firestoreService = new FirestoreService();
         var loadedMetrics = await firestoreService.LoadMetricsAsync(CurrentUserEmail);
@@ -175,6 +177,20 @@ public partial class IndividualViewPage : ContentPage
             await DisplayAlert("⚠️ Warning Alert", "One or more of your metrics is AMBER. Plan to update soon!", "OK");
         }
     }
+    protected override async void OnAppearing()
+{
+    base.OnAppearing();
+
+    if (!SessionService.IsLoggedIn)
+    {
+        await DisplayAlert("Session Expired", "Please login again.", "OK");
+        await Navigation.PopToRootAsync(); // Go back to Login
+        return; // Stop execution
+    }
+
+    await LoadMetrics(); // Only load if logged in
+}
+
 
 
 

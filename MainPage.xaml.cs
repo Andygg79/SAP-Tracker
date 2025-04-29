@@ -25,6 +25,9 @@ public partial class MainPage : ContentPage
 
         if (success)
         {
+            SessionService.IsLoggedIn = true;
+            SessionService.CurrentUserEmail = email;
+
             await DisplayAlert("Login Success", $"Welcome, {email}!", "Continue");
 
             var firestoreService = new FirestoreService();

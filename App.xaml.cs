@@ -5,6 +5,7 @@
         public App()
         {
             InitializeComponent();
+            Routing.RegisterRoute("LoginPage", typeof(MainPage));
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
@@ -14,5 +15,6 @@
                 Page = new NavigationPage(new MainPage())
             };
         }
+
     }
 }

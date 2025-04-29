@@ -37,6 +37,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="Resources\appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
 		<MauiXaml Update="ForgotPasswordPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
