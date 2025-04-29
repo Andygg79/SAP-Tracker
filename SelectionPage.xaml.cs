@@ -40,9 +40,9 @@ public partial class SelectionPage : ContentPage
 
         await DisplayAlert("Logged Out", "You have been logged out.", "OK");
 
-        await Shell.Current.GoToAsync("//LoginPage", true);
-        // Return to Login page (MainPage)
+        await Navigation.PopToRootAsync(); // Return to MainPage (Login)
     }
+
 
 
 }

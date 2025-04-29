@@ -9,16 +9,18 @@ namespace SAPTracker.Services
 
         public FirebaseAuthService()
         {
-            var settingsPath = Path.Combine(FileSystem.AppDataDirectory, "appsettings.json");
+            var settingsPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
 
             if (!File.Exists(settingsPath))
-                throw new Exception("appsettings.json not found in app directory.");
+                throw new Exception($"appsettings.json not found at path: {settingsPath}");
 
             var json = File.ReadAllText(settingsPath);
             var settings = JsonSerializer.Deserialize<Models.AppSettings>(json);
 
-            apiKey = settings?.FirebaseApiKey ?? throw new Exception("Firebase API Key missing from appsettings.json.");
+            apiKey = settings?.Firebase.ApiKey ?? throw new Exception("Firebase API Key missing from appsettings.json.");
         }
+
+
 
         private readonly HttpClient httpClient = new();
 

@@ -8,7 +8,14 @@ namespace SAPTracker.Models
 {
     public class AppSettings
     {
-        public string FirebaseApiKey { get; set; } = "";
+        public FirebaseSettings Firebase { get; set; } = new();
+    }
+
+    public class FirebaseSettings
+    {
+        public string ApiKey { get; set; } = "";
+        public string ProjectId { get; set; } = "";
     }
 }
+
 
