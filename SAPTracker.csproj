@@ -2,6 +2,8 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.19041.0</TargetFrameworks>
+
+
 		<OutputType>Exe</OutputType>
 		<RootNamespace>SAPTracker</RootNamespace>
 		<UseMaui>true</UseMaui>
@@ -31,8 +33,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.4" />
 		<PackageReference Include="Plugin.FirebaseAuth.LinkerFix" Version="4.1.0" />
 	</ItemGroup>
 
@@ -53,5 +53,11 @@
 		<MauiXaml Update="SoldierProfilePage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="TeamMetricsPage.xaml" Generator="MSBuild:Compile" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+	</ItemGroup>
+
 
 </Project>
