@@ -49,14 +49,23 @@
 		<MauiXaml Update="IndividualViewPage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="ProfilePage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="RegisterPage.xaml" Generator="MSBuild:Compile" />
+		<MauiXaml Update="SelectBranchPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="SelectionPage.xaml" Generator="MSBuild:Compile" />
-		<MauiXaml Update="SoldierProfilePage.xaml" Generator="MSBuild:Compile" />
+		<MauiXaml Update="ServiceMemberProfilePage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="TeamMetricsPage.xaml" Generator="MSBuild:Compile" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="ServiceMemberProfilePage.xaml.cs">
+	    <DependentUpon>ServiceMemberProfilePage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 

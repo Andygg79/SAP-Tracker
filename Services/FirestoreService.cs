@@ -2,15 +2,14 @@
 using System.Text.Json;
 using SAPTracker.Models;
 
-
 namespace SAPTracker.Services
 {
     public class FirestoreService
     {
-        private readonly string projectId = "sapt-24jk2y"; // <- Update this line
+        private readonly string projectId = "sapt-24jk2y"; // <- Your Firestore Project ID
         private readonly HttpClient httpClient = new();
 
-        public async Task<bool> SaveUserProfileAsync(string email)
+        public async Task<bool> SaveUserProfileAsync(string email, string branch)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
             var documentPath = $"projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
@@ -20,8 +19,8 @@ namespace SAPTracker.Services
             {
                 fields = new
                 {
-                    email = new { stringValue = email }
-                    // You can add more profile fields later (like rank, phone, etc.)
+                    email = new { stringValue = email },
+                    branch = new { stringValue = branch }
                 }
             };
 
@@ -32,6 +31,7 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+
         public async Task<bool> CheckProfileCompleteAsync(string email)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
@@ -55,6 +55,52 @@ namespace SAPTracker.Services
 
             return false;
         }
+        public async Task<bool> SaveBranchAsync(string email, string branch)
+        {
+            var safeEmailId = email.Replace(".", "_").Replace("@", "_");
+            var documentPath = $"projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
+            var url = $"https://firestore.googleapis.com/v1/{documentPath}?updateMask.fieldPaths=branch";
+
+            var requestData = new
+            {
+                fields = new
+                {
+                    branch = new { stringValue = branch }
+                }
+            };
+
+            var json = JsonSerializer.Serialize(requestData);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            var response = await httpClient.PatchAsync(url, content);
+
+            return response.IsSuccessStatusCode;
+        }
+        public async Task<string> GetBranchAsync(string email)
+        {
+            var safeEmailId = email.Replace(".", "_").Replace("@", "_");
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
+
+            var response = await httpClient.GetAsync(url);
+
+            if (!response.IsSuccessStatusCode)
+                return "Unknown"; // Default fallback if user not found
+
+            var json = await response.Content.ReadAsStringAsync();
+            var document = JsonDocument.Parse(json);
+
+            if (document.RootElement.TryGetProperty("fields", out JsonElement fields))
+            {
+                if (fields.TryGetProperty("branch", out JsonElement branchField))
+                {
+                    return branchField.GetProperty("stringValue").GetString() ?? "Unknown";
+                }
+            }
+
+            return "Unknown";
+        }
+
+
 
         public async Task<bool> SaveMetricsAsync(string email, Dictionary<string, MetricEntry> metrics)
         {
@@ -86,6 +132,7 @@ namespace SAPTracker.Services
 
             return allSuccessful;
         }
+
         public async Task<Dictionary<string, MetricEntry>> LoadMetricsAsync(string email)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
@@ -127,6 +174,7 @@ namespace SAPTracker.Services
 
             return result;
         }
+
         public async Task<bool> SaveProfileAsync(string email, string firstName, string lastName, string rank, string unit, string dutyTitle)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
@@ -153,6 +201,7 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+
         public async Task<bool> AddTeamMemberAsync(string leaderEmail, string memberEmail)
         {
             var safeLeaderId = leaderEmail.Replace(".", "_").Replace("@", "_");
@@ -176,6 +225,7 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+
         public async Task<List<string>> GetTeamMembersAsync(string leaderEmail)
         {
             var safeLeaderId = leaderEmail.Replace(".", "_").Replace("@", "_");
@@ -208,6 +258,7 @@ namespace SAPTracker.Services
 
             return result;
         }
+
         public async Task<(string firstName, string lastName)> GetUserProfileAsync(string email)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
@@ -235,6 +286,7 @@ namespace SAPTracker.Services
 
             return (firstName, lastName);
         }
+
         public async Task<bool> RemoveTeamMemberAsync(string leaderEmail, string memberEmail)
         {
             var safeLeaderId = leaderEmail.Replace(".", "_").Replace("@", "_");
@@ -246,6 +298,7 @@ namespace SAPTracker.Services
 
             return response.IsSuccessStatusCode;
         }
+
         public async Task<(string FirstName, string LastName, string Rank, string Unit, string DutyTitle)> GetFullUserProfileAsync(string email)
         {
             var safeEmailId = email.Replace(".", "_").Replace("@", "_");
@@ -285,6 +338,5 @@ namespace SAPTracker.Services
 
             return (firstName, lastName, rank, unit, dutyTitle);
         }
-
     }
 }

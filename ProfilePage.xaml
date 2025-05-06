@@ -8,6 +8,10 @@
 
             <Label Text="Complete Your Profile" FontSize="24" HorizontalOptions="Center" />
 
+            <!-- New Branch Display -->
+            <Label Text="Branch:" FontSize="18" />
+            <Label x:Name="BranchLabel" Text="Loading..." FontSize="18" TextColor="DarkBlue" />
+
             <Entry x:Name="FirstNameEntry" Placeholder="First Name" />
             <Entry x:Name="LastNameEntry" Placeholder="Last Name" />
             <Entry x:Name="RankEntry" Placeholder="Rank (e.g., SGT)" />

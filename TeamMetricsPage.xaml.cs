@@ -1,26 +1,25 @@
 ﻿using SAPTracker.Services;
+
 namespace SAPTracker;
 
 public class Teammate
 {
     public string? Name { get; set; }
     public string? Email { get; set; }
-    public string StatusColor { get; set; } = "Gray"; // New field!
+    public string StatusColor { get; set; } = "Gray";
 }
-
-
 
 public partial class TeamMetricsPage : ContentPage
 {
     private string CurrentUserId = "";
     private List<Teammate> teamMembers = new();
 
-
     public TeamMetricsPage(string userEmail)
     {
         InitializeComponent();
         CurrentUserId = userEmail;
     }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -28,23 +27,19 @@ public partial class TeamMetricsPage : ContentPage
         if (!SessionService.IsLoggedIn)
         {
             await DisplayAlert("Session Expired", "Please login again.", "OK");
-            await Navigation.PopToRootAsync(); // Return to MainPage
-            return; // Important: Stop execution if not logged in!
+            await Navigation.PopToRootAsync();
+            return;
         }
 
         await LoadTeamMembers();
     }
 
-
-
-
-
     private async void OnAddMemberClicked(object sender, EventArgs e)
     {
         string newMemberEmail = await DisplayPromptAsync(
             "Add Team Member",
-            "Enter the email address of the soldier you want to add:",
-            "Add", "Cancel", "example@soldier.com", maxLength: 100, keyboard: Keyboard.Email);
+            "Enter the email address of the member you want to add:",
+            "Add", "Cancel", "example@service.com", maxLength: 100, keyboard: Keyboard.Email);
 
         if (string.IsNullOrWhiteSpace(newMemberEmail))
             return;
@@ -63,7 +58,6 @@ public partial class TeamMetricsPage : ContentPage
         }
     }
 
-
     private async void OnRemoveMemberClicked(object sender, EventArgs e)
     {
         string email = await DisplayPromptAsync("Remove Member", "Enter email to remove:");
@@ -71,16 +65,12 @@ public partial class TeamMetricsPage : ContentPage
         if (string.IsNullOrWhiteSpace(email))
             return;
 
-        var soldier = teamMembers.FirstOrDefault(t => t.Email == email);
-        if (soldier != null)
+        var member = teamMembers.FirstOrDefault(t => t.Email == email);
+        if (member != null)
         {
-            // Remove from local list
-            teamMembers.Remove(soldier);
+            teamMembers.Remove(member);
             RefreshTeamList();
 
-
-
-            // Remove from Firestore
             var firestoreService = new FirestoreService();
             bool success = await firestoreService.RemoveTeamMemberAsync(CurrentUserId, email);
 
@@ -99,13 +89,12 @@ public partial class TeamMetricsPage : ContentPage
         }
     }
 
-
-
     private void RefreshTeamList()
     {
         TeamList.ItemsSource = null;
         TeamList.ItemsSource = teamMembers;
     }
+
     private void UpdateSummary()
     {
         int total = teamMembers.Count;
@@ -113,11 +102,12 @@ public partial class TeamMetricsPage : ContentPage
         int amber = teamMembers.Count(t => t.StatusColor == "Amber");
         int green = teamMembers.Count(t => t.StatusColor == "Green");
 
-        TotalSoldiersLabel.Text = $"🪖 Total Soldiers: {total}";
+        TotalMembersLabel.Text = $"👥 Total Members: {total}";
         RedCountLabel.Text = $"🔴 Red: {red}";
         AmberCountLabel.Text = $"🟠 Amber: {amber}";
         GreenCountLabel.Text = $"🟢 Green: {green}";
     }
+
     private void CheckForAlerts()
     {
         int redCount = teamMembers.Count(t => t.StatusColor == "Red");
@@ -133,7 +123,6 @@ public partial class TeamMetricsPage : ContentPage
         }
     }
 
-
     private async Task LoadTeamMembers()
     {
         var firestoreService = new FirestoreService();
@@ -143,14 +132,34 @@ public partial class TeamMetricsPage : ContentPage
         foreach (var memberEmail in memberEmails)
         {
             var (firstName, lastName) = await firestoreService.GetUserProfileAsync(memberEmail);
-            var metrics = await firestoreService.LoadMetricsAsync(memberEmail);
+            var branch = await firestoreService.GetBranchAsync(memberEmail); // <-- NEW: Get branch
+            var expectedMetrics = MetricsManagerService.GetMetricsForBranch(branch); // <-- NEW: branch-specific metrics
 
-            string overallColor = "Green"; // Start assuming best
+            var savedMetrics = await firestoreService.LoadMetricsAsync(memberEmail);
 
-            if (metrics.Any(m => m.Value.StatusColor == "RED"))
-                overallColor = "Red";
-            else if (metrics.Any(m => m.Value.StatusColor == "AMBER"))
-                overallColor = "Amber";
+            string overallColor = "Green";
+
+            // Check each expected metric for this branch
+            foreach (var expectedMetric in expectedMetrics)
+            {
+                if (savedMetrics.TryGetValue(expectedMetric.MetricName, out var savedMetric))
+                {
+                    if (savedMetric.StatusColor.Equals("RED", StringComparison.OrdinalIgnoreCase))
+                    {
+                        overallColor = "Red";
+                        break; // Highest priority
+                    }
+                    else if (savedMetric.StatusColor.Equals("AMBER", StringComparison.OrdinalIgnoreCase) && overallColor != "Red")
+                    {
+                        overallColor = "Amber"; // Set to Amber if no Red yet
+                    }
+                }
+                else
+                {
+                    // If missing important metric, treat as Amber (or Red if you want)
+                    overallColor = "Amber";
+                }
+            }
 
             teamMembers.Add(new Teammate
             {
@@ -158,25 +167,21 @@ public partial class TeamMetricsPage : ContentPage
                 Email = memberEmail,
                 StatusColor = overallColor
             });
-
-
         }
 
         RefreshTeamList();
         UpdateSummary();
         CheckForAlerts();
     }
+
+
     private async void OnTeamMemberSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Teammate selectedSoldier && !string.IsNullOrWhiteSpace(selectedSoldier.Email))
+        if (e.CurrentSelection.FirstOrDefault() is Teammate selectedMember && !string.IsNullOrWhiteSpace(selectedMember.Email))
         {
-            await Navigation.PushAsync(new SoldierProfilePage(selectedSoldier.Email));
+            await Navigation.PushAsync(new ServiceMemberProfilePage(selectedMember.Email));
         }
 
-    // Deselect after click
-    ((CollectionView)sender).SelectedItem = null;
+        ((CollectionView)sender).SelectedItem = null;
     }
-
-
-
 }
