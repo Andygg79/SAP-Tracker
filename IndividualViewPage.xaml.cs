@@ -70,4 +70,21 @@ public partial class IndividualViewPage : ContentPage
             }
         }
     }
+    private async void OnSaveClicked(object sender, EventArgs e)
+    {
+        var firestoreService = new FirestoreService();
+
+        // Save the current metrics list to Firestore
+        bool success = await firestoreService.SaveMetricsAsync(UserEmail, MetricsListData);
+
+        if (success)
+        {
+            await DisplayAlert("Success", "Metrics updated successfully!", "OK");
+        }
+        else
+        {
+            await DisplayAlert("Error", "Failed to update metrics. Try again.", "OK");
+        }
+    }
+
 }

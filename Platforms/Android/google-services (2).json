@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "2076683662",
+    "project_id": "saptracker-1979",
+    "storage_bucket": "saptracker-1979.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2076683662:android:693b2e89cc88257a7248df",
+        "android_client_info": {
+          "package_name": "com.saptracker.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-dcDo17cQs7e3vpOpkBW6t8aEuDRwPDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

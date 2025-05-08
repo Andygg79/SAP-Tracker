@@ -35,6 +35,14 @@
 
         </CollectionView>
 
+        <!-- Correct: Save Changes button OUTSIDE CollectionView -->
+        <Button Text="Save Changes"
+                Clicked="OnSaveClicked"
+                BackgroundColor="Green"
+                TextColor="White"
+                FontAttributes="Bold"
+                Margin="10"/>
+
     </VerticalStackLayout>
 
 </ContentPage>

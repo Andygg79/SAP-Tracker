@@ -19,17 +19,14 @@ public partial class ForgotPasswordPage : ContentPage
             return;
         }
 
+        // Show loading spinner BEFORE doing work
+        LoadingIndicator.IsRunning = true;
+        LoadingIndicator.IsVisible = true;
+
         var authService = new FirebaseAuthService();
         var (success, message) = await authService.SendPasswordResetEmailAsync(email);
 
-        // Show loading spinner
-        LoadingIndicator.IsRunning = true;
-        LoadingIndicator.IsVisible = true;        
-
-        authService = new FirebaseAuthService();
-        (success, message) = await authService.SendPasswordResetEmailAsync(email);
-
-        // Hide loading spinner
+        // Hide loading spinner AFTER work
         LoadingIndicator.IsRunning = false;
         LoadingIndicator.IsVisible = false;
 
@@ -42,6 +39,7 @@ public partial class ForgotPasswordPage : ContentPage
         {
             await DisplayAlert("Error", message, "OK");
         }
+
     }
 
     private async void OnCancelClicked(object sender, EventArgs e)
