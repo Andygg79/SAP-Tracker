@@ -2,6 +2,7 @@
 using System.Text.Json;
 using SAPTracker.Models;
 
+
 namespace SAPTracker.Services
 {
     public class FirestoreService
@@ -9,8 +10,9 @@ namespace SAPTracker.Services
         private readonly string projectId = "saptracker-1979"; // Your Firestore Project ID
         private readonly HttpClient httpClient = new();
 
+
         // Save user profile (branch info)
-        public async Task<bool> SaveUserProfileAsync(string email, string branch)
+        public async Task<bool> SaveUserProfileAsync(string email, string branch, string username)
         {
             var safeEmailId = SafeEmail(email);
             var documentPath = $"projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
@@ -20,9 +22,10 @@ namespace SAPTracker.Services
             {
                 fields = new
                 {
-                    email = new { stringValue = email },
-                    branch = new { stringValue = branch },
-                    profileComplete = new { booleanValue = false }
+                    Email = new { stringValue = email },
+                    Branch = new { stringValue = branch },
+                    Username = new { stringValue = username },
+                    ProfileComplete = new { booleanValue = false }
                 }
             };
 
@@ -32,6 +35,31 @@ namespace SAPTracker.Services
             var response = await httpClient.PatchAsync(url, content);
             return response.IsSuccessStatusCode;
         }
+        public async Task<string> GetUsernameAsync(string email)
+        {
+            var safeEmailId = SafeEmail(email);
+            var url = $"https://firestore.googleapis.com/v1/projects/{projectId}/databases/(default)/documents/users/{safeEmailId}";
+
+            var response = await httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+                return "Unknown";
+
+            var json = await response.Content.ReadAsStringAsync();
+            var document = JsonDocument.Parse(json);
+
+            if (document.RootElement.TryGetProperty("fields", out var fields))
+            {
+                if (fields.TryGetProperty("Username", out var usernameField))
+                {
+                    return usernameField.GetProperty("stringValue").GetString() ?? "Unknown";
+                }
+            }
+
+            return "Unknown";
+        }
+
+
+
 
         // Save branch only
         public async Task<bool> SaveBranchAsync(string email, string branch)
@@ -340,11 +368,7 @@ namespace SAPTracker.Services
             return response.IsSuccessStatusCode;
         }
 
-
-
-
-
-        private string SafeEmail(string email)
+        private static string SafeEmail(string email)
         {
             return email.Replace(".", "_").Replace("@", "_");
         }

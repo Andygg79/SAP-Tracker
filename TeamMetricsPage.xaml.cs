@@ -11,8 +11,8 @@ public class Teammate
 
 public partial class TeamMetricsPage : ContentPage
 {
-    private string CurrentUserId = "";
-    private List<Teammate> teamMembers = new();
+    private readonly string CurrentUserId = "";
+    private readonly List<Teammate> teamMembers = [];
 
     public TeamMetricsPage(string userEmail)
     {
@@ -131,7 +131,7 @@ public partial class TeamMetricsPage : ContentPage
         teamMembers.Clear();
         foreach (var memberEmail in memberEmails)
         {
-            var (firstName, lastName) = await firestoreService.GetUserProfileAsync(memberEmail);
+            var username = await firestoreService.GetUsernameAsync(memberEmail);
             var branch = await firestoreService.GetBranchAsync(memberEmail); // <-- NEW: Get branch
             var expectedMetrics = MetricsManagerService.GetMetricsForBranch(branch); // <-- NEW: branch-specific metrics
 
@@ -163,7 +163,7 @@ public partial class TeamMetricsPage : ContentPage
 
             teamMembers.Add(new Teammate
             {
-                Name = $"{firstName} {lastName}",
+                Name = username,
                 Email = memberEmail,
                 StatusColor = overallColor
             });
@@ -177,10 +177,13 @@ public partial class TeamMetricsPage : ContentPage
 
     private async void OnTeamMemberSelected(object sender, SelectionChangedEventArgs e)
     {
-        if (e.CurrentSelection.FirstOrDefault() is Teammate selectedMember && !string.IsNullOrWhiteSpace(selectedMember.Email))
+        if (e.CurrentSelection.Count > 0 &&
+            e.CurrentSelection[0] is Teammate selectedMember &&
+            !string.IsNullOrWhiteSpace(selectedMember.Email))
         {
             await Navigation.PushAsync(new ServiceMemberProfilePage(selectedMember.Email));
         }
+
 
         ((CollectionView)sender).SelectedItem = null;
     }

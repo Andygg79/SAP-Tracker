@@ -14,6 +14,23 @@
                Placeholder="Email"
                Keyboard="Email"
                ClearButtonVisibility="WhileEditing" />
+        
+        <Entry x:Name="UsernameEntry"
+               Placeholder="Create a Username"
+               MaxLength="30" />
+        <Picker x:Name="BranchPicker"
+                Title="Select Branch"
+                HorizontalOptions="FillAndExpand">
+                    <Picker.ItemsSource>
+                       <x:Array Type="{x:Type x:String}">
+                        <x:String>Army</x:String>
+                        <x:String>Navy</x:String>
+                        <x:String>Air Force</x:String>
+                        <x:String>Marines</x:String>
+                       </x:Array>
+                    </Picker.ItemsSource>
+        </Picker>
+
 
         <Entry x:Name="PasswordEntry"
                Placeholder="Password"

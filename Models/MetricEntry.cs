@@ -2,7 +2,7 @@
 
 namespace SAPTracker.Models
 {
-    public class MetricEntry : INotifyPropertyChanged
+    public partial class MetricEntry : INotifyPropertyChanged
     {
         private string _metricName = string.Empty;
         public string MetricName

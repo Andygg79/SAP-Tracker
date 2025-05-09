@@ -4,7 +4,7 @@ namespace SAPTracker;
 
 public partial class SelectBranchPage : ContentPage
 {
-    private string UserEmail = "";
+    private readonly string UserEmail = "";
 
     public SelectBranchPage(string email)
     {

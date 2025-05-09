@@ -1,5 +1,6 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SAPTracker.Models"
              x:Class="SAPTracker.TeamMetricsPage"
              Title="Team Metrics">
 
@@ -40,7 +41,7 @@
                         SelectionMode="Single"
                         SelectionChanged="OnTeamMemberSelected">
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="models:Teammate">
                     <Frame BorderColor="LightGray" Padding="10" CornerRadius="8" Margin="5">
                         <VerticalStackLayout>
                             <Label Text="{Binding Name}" 

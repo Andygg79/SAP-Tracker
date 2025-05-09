@@ -19,24 +19,10 @@ public partial class ServiceMemberProfilePage : ContentPage
 
         var firestoreService = new FirestoreService();
 
-        // Get service member full profile
-        var (firstName, lastName, rank, unit, dutyTitle) = await firestoreService.GetFullUserProfileAsync(MemberEmail);
-
-        NameLabel.Text = $"{firstName} {lastName}";
-        RankLabel.Text = $"Rank: {rank}";
-        UnitLabel.Text = $"Unit: {unit}";
-        DutyTitleLabel.Text = $"Duty Title: {dutyTitle}";
-
-        // Get their branch
         var branch = await firestoreService.GetBranchAsync(MemberEmail);
-
-        // Load expected metrics for their branch
         var expectedMetrics = MetricsManagerService.GetMetricsForBranch(branch);
-
-        // Load actual saved metrics from Firestore
         var savedMetrics = await firestoreService.LoadMetricsAsync(MemberEmail);
 
-        // Merge expected + actual to show complete picture
         List<MetricEntry> displayMetrics = new();
 
         foreach (var expectedMetric in expectedMetrics)
@@ -47,7 +33,8 @@ public partial class ServiceMemberProfilePage : ContentPage
                 {
                     MetricName = expectedMetric.MetricName,
                     LastUpdatedDate = savedMetric.LastUpdatedDate,
-                    StatusColor = savedMetric.StatusColor
+                    StatusColor = savedMetric.StatusColor,
+                    StatusName = savedMetric.StatusName
                 });
             }
             else
@@ -55,8 +42,9 @@ public partial class ServiceMemberProfilePage : ContentPage
                 displayMetrics.Add(new MetricEntry
                 {
                     MetricName = expectedMetric.MetricName,
-                    LastUpdatedDate = DateTime.MinValue, // No record yet
-                    StatusColor = "Gray"
+                    LastUpdatedDate = DateTime.MinValue,
+                    StatusColor = "Gray",
+                    StatusName = "Unknown"
                 });
             }
         }
