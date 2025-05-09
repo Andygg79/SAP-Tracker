@@ -3,46 +3,48 @@
              x:Class="SAPTracker.IndividualViewPage"
              Title="Individual Metrics">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
 
-        <Label Text="Individual Readiness Metrics"
-               FontSize="24"
-               FontAttributes="Bold"
-               HorizontalOptions="Center" />
+            <Label Text="Individual Readiness Metrics"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
 
-        <CollectionView x:Name="MetricsCollectionView"
-                        ItemsLayout="VerticalList"
-                        SelectionMode="None">
+            <CollectionView x:Name="MetricsCollectionView"
+                            ItemsLayout="VerticalList"
+                            SelectionMode="None"
+                            HeightRequest="1000">
+                <!-- Optional, can be removed -->
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame BorderColor="Black" Padding="10" CornerRadius="8" Margin="5">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding MetricName}" FontSize="18" />
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="Black" Padding="10" CornerRadius="8" Margin="5">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding MetricName}" FontSize="18" />
 
-                            <HorizontalStackLayout Spacing="10">
-                                <DatePicker Date="{Binding LastUpdatedDate}"
-                                            DateSelected="OnMetricDateChanged" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <DatePicker Date="{Binding LastUpdatedDate}"
+                                                DateSelected="OnMetricDateChanged" />
 
-                                <Button Text="{Binding StatusColor}" 
-                                        BackgroundColor="{Binding StatusColor}" 
-                                        TextColor="White" />
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                                    <Button Text="{Binding StatusName}" 
+                                            BackgroundColor="{Binding StatusColor}" 
+                                            TextColor="White" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
 
-        </CollectionView>
+            </CollectionView>
 
-        <!-- Correct: Save Changes button OUTSIDE CollectionView -->
-        <Button Text="Save Changes"
-                Clicked="OnSaveClicked"
-                BackgroundColor="Green"
-                TextColor="White"
-                FontAttributes="Bold"
-                Margin="10"/>
+            <Button Text="Save Changes"
+                    Clicked="OnSaveClicked"
+                    BackgroundColor="Green"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    Margin="10"/>
 
-    </VerticalStackLayout>
-
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

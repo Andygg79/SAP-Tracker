@@ -1,4 +1,5 @@
-﻿using SAPTracker.Helpers;
+﻿using System.Collections.ObjectModel;
+using SAPTracker.Helpers;
 using SAPTracker.Models;
 using SAPTracker.Services;
 
@@ -7,7 +8,7 @@ namespace SAPTracker;
 public partial class IndividualViewPage : ContentPage
 {
     private string UserEmail = "";
-    private List<MetricEntry> MetricsListData = new(); // Local cache for updates
+    private ObservableCollection<MetricEntry> MetricsListData = new();// Local cache for updates
 
     public IndividualViewPage(string email)
     {
@@ -55,27 +56,24 @@ public partial class IndividualViewPage : ContentPage
 
     private void OnMetricDateChanged(object sender, DateChangedEventArgs e)
     {
-        if (sender is DatePicker picker)
+        if (sender is DatePicker picker && picker.BindingContext is MetricEntry metric)
         {
-            if (picker.BindingContext is MetricEntry metric)
-            {
-                var newColor = StatusHelper.GetStatusColor(picker.Date);
+            metric.LastUpdatedDate = picker.Date;
 
-                metric.LastUpdatedDate = picker.Date;
-                metric.StatusColor = newColor;
-
-                // Force the CollectionView to refresh its items
-                MetricsCollectionView.ItemsSource = null;
-                MetricsCollectionView.ItemsSource = MetricsListData;
-            }
+            var (color, label) = StatusHelper.GetStatus(picker.Date);
+            metric.StatusColor = color;
+            metric.StatusName = label;
         }
     }
+
+
+
     private async void OnSaveClicked(object sender, EventArgs e)
     {
         var firestoreService = new FirestoreService();
 
         // Save the current metrics list to Firestore
-        bool success = await firestoreService.SaveMetricsAsync(UserEmail, MetricsListData);
+        bool success = await firestoreService.SaveMetricsAsync(UserEmail, MetricsListData.ToList());
 
         if (success)
         {

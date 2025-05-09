@@ -2,16 +2,20 @@
 {
     public static class StatusHelper
     {
-        public static string GetStatusColor(DateTime selectedDate)
+        public static (string ColorCode, string StatusName) GetStatus(DateTime lastCompletedDate)
         {
-            var daysDifference = (DateTime.Today - selectedDate).TotalDays;
+            DateTime nextDueDate = lastCompletedDate.AddYears(1);
+            int daysUntilDue = (nextDueDate - DateTime.Today).Days;
 
-            if (daysDifference > 90)
-                return "Red";
-            else if (daysDifference > 30)
-                return "Amber";
+            if (daysUntilDue > 90)
+                return ("Green", "Green");
+            else if (daysUntilDue > 30)
+                return ("#FFA500", "Amber"); // ✅ Correct color + label
             else
-                return "Green";
+                return ("Red", "Red");
         }
+
+
     }
 }
+

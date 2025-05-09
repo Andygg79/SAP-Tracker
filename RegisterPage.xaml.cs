@@ -1,4 +1,4 @@
-using SAPTracker.Services;
+﻿using SAPTracker.Services;
 
 namespace SAPTracker;
 
@@ -32,9 +32,10 @@ public partial class RegisterPage : ContentPage
 
         if (success)
         {
-            // Registration Success: Now navigate to SelectBranchPage
-            await DisplayAlert("Success", "Account created! Now select your branch.", "OK");
-            await Navigation.PushAsync(new SelectBranchPage(email));
+            await DisplayAlert("Success", "Account created! Please login.", "OK");
+
+            // 🎯 After successful registration, close the modal properly
+            await Navigation.PopModalAsync(); // ✅ Correct way for modal pages
         }
         else
         {
@@ -42,8 +43,13 @@ public partial class RegisterPage : ContentPage
         }
     }
 
+
+
     private async void OnBackClicked(object sender, EventArgs e)
     {
-        await Navigation.PopModalAsync();
+        await Navigation.PopModalAsync(); // ✅ Correct for modal
     }
+
+
+
 }
