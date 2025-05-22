@@ -1,0 +1,26 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SAPTracker.SelectBranchPage"
+             Title="Select Branch">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label Text="Select your branch:" FontSize="20" />
+
+        <Picker x:Name="BranchPicker" Title="Select Branch">
+            <Picker.ItemsSource>
+                <x:Array Type="{x:Type x:String}">
+                    <x:String>Army</x:String>
+                    <x:String>Navy</x:String>
+                    <x:String>Air Force</x:String>
+                    <x:String>Marines</x:String>
+                </x:Array>
+            </Picker.ItemsSource>
+        </Picker>
+
+        <Button Text="Continue"
+        Clicked="OnSaveBranchClicked"
+        BackgroundColor="DarkGreen"
+        TextColor="White" />
+
+    </VerticalStackLayout>
+</ContentPage>

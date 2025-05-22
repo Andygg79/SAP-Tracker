@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.saptracker.app"
+          android:versionCode="1"
+          android:versionName="Cherry">
+
+  <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="35" />
+
+  <!-- Permissions -->
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.RECEIVE_SMS" />
+
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/appicon"
+      android:supportsRtl="true"
+      android:label="SAPTracker"
+      android:theme="@style/Maui.SplashTheme"
+      android:name="crc645a341fb035b2a2ef.MainApplication"
+      android:debuggable="true"
+      android:extractNativeLibs="true">
+
+    <!-- ✅ KEEP ONLY CUSTOM MESSAGING SERVICE -->
+    <service
+        android:name="com.saptracker.app.MyFirebaseMessagingService"
+        android:exported="true"
+        android:permission="com.google.android.c2dm.permission.SEND"
+        tools:replace="android:exported">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+
+    <!-- Optional: Firebase IID Receiver (older devices) -->
+    <receiver android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+              android:enabled="true"
+              android:exported="true">
+      <intent-filter>
+        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+      </intent-filter>
+    </receiver>
+
+    <uses-library android:name="org.apache.http.legacy" android:required="false" />
+
+    <!-- Activities -->
+    <activity android:configChanges="orientation|screenSize"
+              android:exported="true"
+              android:name="crc647c6015fbf26ba7ab.MainActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+
+    <activity android:configChanges="orientation|screenSize"
+              android:exported="false"
+              android:name="crc6468b6408a11370c2f.WebAuthenticatorIntermediateActivity" />
+
+    <!-- Maui Essentials -->
+    <provider
+        android:authorities="com.saptracker.app.fileProvider"
+        android:exported="false"
+        android:grantUriPermissions="true"
+        android:name="microsoft.maui.essentials.fileProvider">
+      <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/microsoft_maui_essentials_fileprovider_file_paths" />
+    </provider>
+
+    <receiver android:enabled="true"
+              android:exported="false"
+              android:label="Essentials Connectivity Broadcast Receiver"
+              android:name="crc64e53d2f592022988e.ConnectivityBroadcastReceiver" />
+
+    <activity android:configChanges="orientation|screenSize"
+              android:exported="false"
+              android:name="crc64ba438d8f48cf7e75.IntermediateActivity" />
+
+    <receiver android:enabled="true"
+              android:exported="false"
+              android:label="Essentials Battery Broadcast Receiver"
+              android:name="crc640a8d9a12ddbf2cf2.BatteryBroadcastReceiver" />
+
+    <receiver android:enabled="true"
+              android:exported="false"
+              android:label="Essentials Energy Saver Broadcast Receiver"
+              android:name="crc640a8d9a12ddbf2cf2.EnergySaverBroadcastReceiver" />
+
+    <service android:name="crc64396a3fe5f8138e3f.KeepAliveService" />
+
+    <provider android:name="mono.MonoRuntimeProvider"
+              android:exported="false"
+              android:initOrder="1999999999"
+              android:authorities="com.saptracker.app.mono.MonoRuntimeProvider.__mono_init__" />
+  </application>
+</manifest>

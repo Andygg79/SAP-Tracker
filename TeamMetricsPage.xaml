@@ -1,0 +1,64 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SAPTracker.Models"
+             x:Class="SAPTracker.TeamMetricsPage"
+             Title="Team Metrics">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <!-- Buttons to Add and Remove Team Members -->
+        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+            <Button Text="Add Member" Clicked="OnAddMemberClicked" />
+            <Button Text="Remove Member" Clicked="OnRemoveMemberClicked" />
+        </HorizontalStackLayout>
+
+        <!-- Summary Counts -->
+        <Label x:Name="TotalMembersLabel" 
+               Text="👥 Total Members: 0" 
+               FontSize="18"
+               HorizontalOptions="Center" />
+
+        <Label x:Name="RedCountLabel" 
+               Text="🔴 Red: 0" 
+               FontSize="16"
+               TextColor="Red"
+               HorizontalOptions="Center" />
+
+        <Label x:Name="AmberCountLabel" 
+               Text="🟠 Amber: 0" 
+               FontSize="16"
+               TextColor="Orange"
+               HorizontalOptions="Center" />
+
+        <Label x:Name="GreenCountLabel" 
+               Text="🟢 Green: 0" 
+               FontSize="16"
+               TextColor="Green"
+               HorizontalOptions="Center" />
+
+        <!-- Team List -->
+        <CollectionView x:Name="TeamList"
+                        SelectionMode="Single"
+                        SelectionChanged="OnTeamMemberSelected">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:Teammate">
+                    <Frame BorderColor="LightGray" Padding="10" CornerRadius="8" Margin="5">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding Name}" 
+                                   FontSize="18"
+                                   FontAttributes="Bold" />
+                            <Label Text="{Binding Email}" 
+                                   FontSize="14" 
+                                   TextColor="Gray" />
+                            <Label Text="{Binding StatusColor}" 
+                                   FontSize="14"
+                                   TextColor="{Binding StatusColor}" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+
+</ContentPage>

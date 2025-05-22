@@ -1,0 +1,41 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SAPTracker.Models"
+             x:Class="SAPTracker.ServiceMemberProfilePage"
+             Title="Service Member Metrics">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Readiness Metrics"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <CollectionView x:Name="MetricsList"
+                            ItemsLayout="VerticalList"
+                            SelectionMode="None">
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:MetricEntry">
+                        <Frame BorderColor="Black" Padding="10" CornerRadius="8" Margin="5">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding MetricName}" FontSize="18" />
+
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="{Binding LastUpdatedDate, StringFormat='Last Completed: {0:d}'}"
+                                           FontSize="14" />
+                                    <Button Text="{Binding StatusName}"
+                                            BackgroundColor="{Binding StatusColor}"
+                                            TextColor="White" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

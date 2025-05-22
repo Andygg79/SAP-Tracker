@@ -1,0 +1,46 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:SAPTracker.Models"
+             x:Class="SAPTracker.IndividualViewPage"
+             Title="Individual Metrics">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Individual Readiness Metrics"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <CollectionView x:Name="MetricsCollectionView"
+                            ItemsLayout="VerticalList"
+                            SelectionMode="None"
+                            HeightRequest="1000">
+                <!-- Optional, can be removed -->
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:MetricEntry">
+                        <Frame BorderColor="Black" Padding="10" CornerRadius="8" Margin="5">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding MetricName}" FontSize="18" />
+                                <HorizontalStackLayout Spacing="10">
+                                    <DatePicker Date="{Binding LastUpdatedDate}" DateSelected="OnMetricDateChanged" />
+                                    <Button Text="{Binding StatusName}" BackgroundColor="{Binding StatusColor}" TextColor="White" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+            <Button Text="Save Changes"
+                    Clicked="OnSaveClicked"
+                    BackgroundColor="Green"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    Margin="10"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
