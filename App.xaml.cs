@@ -5,14 +5,14 @@
         public App()
         {
             InitializeComponent();
-            Routing.RegisterRoute("LoginPage", typeof(MainPage));
+            Routing.RegisterRoute("LoginPage", typeof(LoginPage));
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
             return new Window
             {
-                Page = new NavigationPage(new MainPage())
+                Page = new NavigationPage(new LoginPage())
             };
         }
 
