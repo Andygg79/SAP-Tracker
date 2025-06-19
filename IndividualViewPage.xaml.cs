@@ -1,97 +1,102 @@
 ﻿using SAPTracker.Models;
-namespace SAPTracker;
 using SAPTracker.Services;
 
+namespace SAPTracker;
 
 public partial class IndividualViewPage : ContentPage
 {
-    private Dictionary<string, MetricEntry> metrics = new();
-    private string CurrentUserEmail = "";
+    private readonly Dictionary<string, MetricEntry> metrics = new();
+    private readonly string _currentUserEmail;
 
     public IndividualViewPage(string userEmail)
     {
         InitializeComponent();
-        CurrentUserEmail = userEmail;
+        _currentUserEmail = userEmail;
+    }
 
+    #region Life Cycle
 
-        // Initialize button states
-        UpdateStatus(WeaponsDatePicker, WeaponsStatusButton, "Weapons");
-        UpdateStatus(DentalDatePicker, DentalStatusButton, "Dental");
-        UpdateStatus(PHADatePicker, PHAStatusButton, "PHA");
-        UpdateStatus(VisionDatePicker, VisionStatusButton, "VISION");
-        UpdateStatus(HearingDatePicker, HearingStatusButton, "HEARING");
-        UpdateStatus(DD93DatePicker, DD93StatusButton, "DD93");
-        UpdateStatus(DA5960DatePicker, DA5960StatusButton, "DA5960");
-        UpdateStatus(PRRDatePicker, PRRStatusButton, "PRR");
-        UpdateStatus(SGLVDatePicker, SGLVStatusButton, "SGLV");
-        UpdateStatus(ARBDatePicker, ARBStatusButton, "ARB");
-        UpdateStatus(EvalDatePicker, EvalStatusButton, "EVAL");
-    }    
-
-
-
-    private async void OnMetricDateChanged(object sender, DateChangedEventArgs e)
+    protected override async void OnAppearing()
     {
-        Button? statusButton = null;
-        string metricName = "";
+        base.OnAppearing();
 
-        if (sender is DatePicker datePicker)
+        if (!SessionService.IsLoggedIn)
         {
-            if (datePicker == WeaponsDatePicker) { statusButton = WeaponsStatusButton; metricName = "Weapons"; }
-            else if (datePicker == DentalDatePicker) { statusButton = DentalStatusButton; metricName = "Dental"; }
-            else if (datePicker == PHADatePicker) { statusButton = PHAStatusButton; metricName = "PHA"; }
-            else if (datePicker == VisionDatePicker) { statusButton = VisionStatusButton; metricName = "VISION"; }
-            else if (datePicker == HearingDatePicker) { statusButton = HearingStatusButton; metricName = "HEARING"; }
-            else if (datePicker == DD93DatePicker) { statusButton = DD93StatusButton; metricName = "DD93"; }
-            else if (datePicker == DA5960DatePicker) { statusButton = DA5960StatusButton; metricName = "DA5960"; }
-            else if (datePicker == PRRDatePicker) { statusButton = PRRStatusButton; metricName = "PRR"; }
-            else if (datePicker == SGLVDatePicker) { statusButton = SGLVStatusButton; metricName = "SGLV"; }
-            else if (datePicker == ARBDatePicker) { statusButton = ARBStatusButton; metricName = "ARB"; }
-            else if (datePicker == EvalDatePicker) { statusButton = EvalStatusButton; metricName = "EVAL"; }
-
-            if (statusButton != null && metricName != "")
-            {
-                UpdateStatus(datePicker, statusButton, metricName);
-                var firestoreService = new FirestoreService();
-                bool saved = await firestoreService.SaveMetricsAsync(CurrentUserEmail, metrics); // <-- we'll define CurrentUserEmail next
-
-                if (!saved)
-                {
-                    await DisplayAlert("Warning", "Failed to save metrics to server. Please check your connection.", "OK");
-                    await CheckIndividualAlertsAsync();
-
-                }
-            }
+            await DisplayAlert("Session Expired", "Please login again.", "OK");
+            await Navigation.PopToRootAsync();
+            return;
         }
 
+        await LoadMetrics();
+    }
+
+    #endregion
+
+    #region Metric Logic
+
+    private async Task LoadMetrics()
+    {
+        var firestoreService = new FirestoreService();
+        var loadedMetrics = await firestoreService.LoadMetricsAsync(_currentUserEmail);
+
+        foreach (var metric in loadedMetrics)
+        {
+            DatePicker? picker = metric.Key switch
+            {
+                "Weapons" => WeaponsDatePicker,
+                "Dental" => DentalDatePicker,
+                "PHA" => PHADatePicker,
+                "VISION" => VisionDatePicker,
+                "HEARING" => HearingDatePicker,
+                "DD93" => DD93DatePicker,
+                "DA5960" => DA5960DatePicker,
+                "PRR" => PRRDatePicker,
+                "SGLV" => SGLVDatePicker,
+                "ARB" => ARBDatePicker,
+                "EVAL" => EvalDatePicker,
+                _ => null
+            };
+
+            Button? button = metric.Key switch
+            {
+                "Weapons" => WeaponsStatusButton,
+                "Dental" => DentalStatusButton,
+                "PHA" => PHAStatusButton,
+                "VISION" => VisionStatusButton,
+                "HEARING" => HearingStatusButton,
+                "DD93" => DD93StatusButton,
+                "DA5960" => DA5960StatusButton,
+                "PRR" => PRRStatusButton,
+                "SGLV" => SGLVStatusButton,
+                "ARB" => ARBStatusButton,
+                "EVAL" => EvalStatusButton,
+                _ => null
+            };
+
+            if (picker != null && button != null)
+            {
+                picker.Date = metric.Value.LastUpdatedDate;
+                UpdateStatus(picker, button, metric.Key);
+            }
+        }
     }
 
     private void UpdateStatus(DatePicker picker, Button button, string metricName)
     {
-        var expirationDate = picker.Date.AddYears(1);
-        var daysUntilExpiration = (expirationDate - DateTime.Now).TotalDays;
-        string status;
-
-        if (daysUntilExpiration <= 30)
-        {
-            status = "RED";
-            button.BackgroundColor = Colors.Red;
-        }
-        else if (daysUntilExpiration <= 90)
-        {
-            status = "AMBER";
-            button.BackgroundColor = Colors.LightCoral;
-        }
-        else
-        {
-            status = "GREEN";
-            button.BackgroundColor = Colors.Green;
-        }
+        DateTime expirationDate = picker.Date.AddYears(1);
+        double daysLeft = (expirationDate - DateTime.Now).TotalDays;
+        string status = daysLeft <= 30 ? "RED" : daysLeft <= 90 ? "AMBER" : "GREEN";
 
         button.Text = status;
+        button.BackgroundColor = status switch
+        {
+            "RED" => Colors.Red,
+            "AMBER" => Colors.Orange,
+            "GREEN" => Colors.Green,
+            _ => Colors.Gray
+        };
         button.TextColor = Colors.White;
 
-        // Save to our local metric dictionary
         metrics[metricName] = new MetricEntry
         {
             MetricName = metricName,
@@ -99,70 +104,21 @@ public partial class IndividualViewPage : ContentPage
             StatusColor = status
         };
     }
-    private async Task LoadMetrics()
-    {
-        var firestoreService = new FirestoreService();
-        var loadedMetrics = await firestoreService.LoadMetricsAsync(CurrentUserEmail);
 
-        foreach (var metric in loadedMetrics)
+    private async Task SaveMetricAsync(DatePicker picker, Button button, string metricName)
+    {
+        UpdateStatus(picker, button, metricName);
+        var firestoreService = new FirestoreService();
+        bool saved = await firestoreService.SaveMetricsAsync(_currentUserEmail, metrics);
+
+        if (!saved)
         {
-            if (metric.Key == "Weapons")
-            {
-                WeaponsDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(WeaponsDatePicker, WeaponsStatusButton, "Weapons");
-            }
-            else if (metric.Key == "Dental")
-            {
-                DentalDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(DentalDatePicker, DentalStatusButton, "Dental");
-            }
-            else if (metric.Key == "PHA")
-            {
-                PHADatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(PHADatePicker, PHAStatusButton, "PHA");
-            }
-            else if (metric.Key == "VISION")
-            {
-                VisionDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(VisionDatePicker, VisionStatusButton, "VISION");
-            }
-            else if (metric.Key == "HEARING")
-            {
-                HearingDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(HearingDatePicker, HearingStatusButton, "HEARING");
-            }
-            else if (metric.Key == "DD93")
-            {
-                DD93DatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(DD93DatePicker, DD93StatusButton, "DD93");
-            }
-            else if (metric.Key == "DA5960")
-            {
-                DA5960DatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(DA5960DatePicker, DA5960StatusButton, "DA5960");
-            }
-            else if (metric.Key == "PRR")
-            {
-                PRRDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(PRRDatePicker, PRRStatusButton, "PRR");
-            }
-            else if (metric.Key == "SGLV")
-            {
-                SGLVDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(SGLVDatePicker, SGLVStatusButton, "SGLV");
-            }
-            else if (metric.Key == "ARB")
-            {
-                ARBDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(ARBDatePicker, ARBStatusButton, "ARB");
-            }
-            else if (metric.Key == "EVAL")
-            {
-                EvalDatePicker.Date = metric.Value.LastUpdatedDate;
-                UpdateStatus(EvalDatePicker, EvalStatusButton, "EVAL");
-            }
+            await DisplayAlert("Warning", "Failed to save metrics. Check your connection.", "OK");
         }
+
+        await CheckIndividualAlertsAsync();
     }
+
     private async Task CheckIndividualAlertsAsync()
     {
         bool hasRed = metrics.Values.Any(m => m.StatusColor == "RED");
@@ -174,25 +130,39 @@ public partial class IndividualViewPage : ContentPage
         }
         else if (hasAmber)
         {
-            await DisplayAlert("⚠️ Warning Alert", "One or more of your metrics is AMBER. Plan to update soon!", "OK");
+            await DisplayAlert("⚠️ Warning", "One or more of your metrics is AMBER. Plan to update soon.", "OK");
         }
     }
-    protected override async void OnAppearing()
-{
-    base.OnAppearing();
 
-    if (!SessionService.IsLoggedIn)
+    #endregion
+
+    #region Event Handlers
+
+    private async void OnMetricDateChanged(object sender, DateChangedEventArgs e)
     {
-        await DisplayAlert("Session Expired", "Please login again.", "OK");
-        await Navigation.PopToRootAsync(); // Go back to Login
-        return; // Stop execution
+        if (sender is not DatePicker picker) return;
+
+        var (button, metricName) = picker switch
+        {
+            _ when picker == WeaponsDatePicker => (WeaponsStatusButton, "Weapons"),
+            _ when picker == DentalDatePicker => (DentalStatusButton, "Dental"),
+            _ when picker == PHADatePicker => (PHAStatusButton, "PHA"),
+            _ when picker == VisionDatePicker => (VisionStatusButton, "VISION"),
+            _ when picker == HearingDatePicker => (HearingStatusButton, "HEARING"),
+            _ when picker == DD93DatePicker => (DD93StatusButton, "DD93"),
+            _ when picker == DA5960DatePicker => (DA5960StatusButton, "DA5960"),
+            _ when picker == PRRDatePicker => (PRRStatusButton, "PRR"),
+            _ when picker == SGLVDatePicker => (SGLVStatusButton, "SGLV"),
+            _ when picker == ARBDatePicker => (ARBStatusButton, "ARB"),
+            _ when picker == EvalDatePicker => (EvalStatusButton, "EVAL"),
+            _ => (null, "")
+        };
+
+        if (button != null && !string.IsNullOrEmpty(metricName))
+        {
+            await SaveMetricAsync(picker, button, metricName);
+        }
     }
 
-    await LoadMetrics(); // Only load if logged in
-}
-
-
-
-
-
+    #endregion
 }

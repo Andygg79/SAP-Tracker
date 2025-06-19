@@ -4,82 +4,86 @@
              x:Class="SAPTracker.TeamMetricsPage"
              Title="Team Metrics">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
 
-        <!-- Add/Remove Buttons -->
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
-            <Button Text="Add Member"
-                    Clicked="OnAddMemberClicked"
-                    BackgroundColor="#007AFF"
-                    TextColor="White"
-                    CornerRadius="8"
-                    WidthRequest="140" />
+            <!-- Add/Remove Buttons -->
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="15">
+                <Button Text="Add Member"
+                        Clicked="OnAddMemberClicked"
+                        BackgroundColor="#007AFF"
+                        TextColor="White"
+                        CornerRadius="8"
+                        WidthRequest="140" />
 
-            <Button Text="Remove Member"
-                    Clicked="OnRemoveMemberClicked"
-                    BackgroundColor="#FF3B30"
-                    TextColor="White"
-                    CornerRadius="8"
-                    WidthRequest="140" />
-        </HorizontalStackLayout>
+                <Button Text="Remove Member"
+                        Clicked="OnRemoveMemberClicked"
+                        BackgroundColor="#FF3B30"
+                        TextColor="White"
+                        CornerRadius="8"
+                        WidthRequest="140" />
+            </HorizontalStackLayout>
 
-        <!-- Team Members Header -->
-        <Label Text="Team Members"
-               FontSize="20"
-               FontAttributes="Bold"
-               HorizontalOptions="Center"
-               Margin="0,15,0,0" />
-        
-        
-        <!-- Team Readiness Summary -->
-        <Border Stroke="Black" BackgroundColor="#EFEFEF" Padding="15">
-            <VerticalStackLayout Spacing="5" HorizontalOptions="Center">
-                <Label x:Name="TotalSoldiersLabel" FontSize="20" FontAttributes="Bold" />
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
-                    <Label x:Name="RedCountLabel" TextColor="Red" FontSize="18" />
-                    <Label x:Name="AmberCountLabel" TextColor="Gold" FontSize="18" />
-                    <Label x:Name="GreenCountLabel" TextColor="Green" FontSize="18" />
-                </HorizontalStackLayout>
-            </VerticalStackLayout>
-        </Border>
+            <!-- Team Members Header -->
+            <Label Text="Team Members"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   Margin="0,20,0,0" />
 
-        <!-- Team List -->
-        <CollectionView x:Name="TeamList"
-                        ItemsLayout="VerticalList"
-                        SelectionMode="Single"
-                        SelectionChanged="OnTeamMemberSelected"
-                        HeightRequest="500">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="local:Teammate">
-                    <Border BackgroundColor="#F5F5F5"
-                           Stroke="Black"
-                           Padding="15"
-                           Margin="5">
-                        <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
+            <!-- Team Readiness Summary -->
+            <Frame BorderColor="Black" BackgroundColor="#EFEFEF" Padding="15">
+                <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                    <Label x:Name="TotalSoldiersLabel"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="Black" />
+                    <HorizontalStackLayout Spacing="25" HorizontalOptions="Center">
+                        <Label x:Name="RedCountLabel" TextColor="Red" FontSize="18" />
+                        <Label x:Name="AmberCountLabel" TextColor="DarkOrange" FontSize="18" />
+                        <Label x:Name="GreenCountLabel" TextColor="Green" FontSize="18" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Frame>
 
-                            <!-- Readiness Color Dot -->
-                            <BoxView WidthRequest="20" 
-                                     HeightRequest="20" 
-                                     CornerRadius="10"
-                                     Color="{Binding StatusColor}" />
+            <!-- Team List -->
+            <CollectionView x:Name="TeamList"
+                            ItemsLayout="VerticalList"
+                            SelectionMode="Single"
+                            SelectionChanged="OnTeamMemberSelected"
+                            HeightRequest="500">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="local:Teammate">
+                        <Frame BorderColor="Gray"
+                               CornerRadius="12"
+                               Padding="12"
+                               Margin="5"
+                               BackgroundColor="#F9F9F9"
+                               HasShadow="True">
+                            <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
 
-                            <!-- Soldier Info -->
-                            <VerticalStackLayout>
-                                <Label Text="{Binding Name}"
-                                       FontSize="22"
-                                       FontAttributes="Bold"
-                                       TextColor="Black" />
-                                <Label Text="{Binding Email}"
-                                       FontSize="14"
-                                       TextColor="Gray" />
-                            </VerticalStackLayout>
+                                <!-- Status Dot -->
+                                <BoxView WidthRequest="20"
+                                         HeightRequest="20"
+                                         CornerRadius="10"
+                                         Color="{Binding StatusColor}" />
 
-                        </HorizontalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+                                <!-- Member Info -->
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Name}"
+                                           FontSize="20"
+                                           FontAttributes="Bold"
+                                           TextColor="Black" />
+                                    <Label Text="{Binding Email}"
+                                           FontSize="14"
+                                           TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-        </CollectionView>
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

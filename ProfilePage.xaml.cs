@@ -33,8 +33,11 @@ public partial class ProfilePage : ContentPage
         if (success)
         {
             await DisplayAlert("Success", "Profile saved successfully!", "OK");
-            await Navigation.PushAsync(new SelectionPage(CurrentUserEmail));
+
+            var firestoreServiceInstance = new FirestoreService(); // Create instance
+            await Navigation.PushAsync(new SelectionPage(firestoreServiceInstance, CurrentUserEmail)); // Pass both
         }
+
         else
         {
             await DisplayAlert("Error", "Failed to save profile. Check your connection.", "OK");

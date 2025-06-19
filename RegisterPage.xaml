@@ -3,18 +3,49 @@
              x:Class="SAPTracker.RegisterPage"
              Title="Create Account">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <VerticalStackLayout Padding="20" Spacing="20">
 
-        <Label Text="Create Account" FontSize="24" HorizontalOptions="Center" />
+        <Label Text="Create Account"
+               FontSize="28"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,10,0,20" />
 
-        <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email" />
-        <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="True" />
-        <Entry x:Name="ConfirmPasswordEntry" Placeholder="Confirm Password" IsPassword="True" />
+        <Entry x:Name="EmailEntry"
+               Placeholder="Email"
+               Keyboard="Email"
+               FontSize="16"
+               ClearButtonVisibility="WhileEditing" />
 
-        <Button Text="Create Account" Clicked="OnCreateAccountClicked" />
+        <Entry x:Name="PasswordEntry"
+               Placeholder="Password"
+               IsPassword="True"
+               FontSize="16"
+               ClearButtonVisibility="WhileEditing" />
 
-        <Button Text="Back to Login" Clicked="OnBackClicked" />
+        <Entry x:Name="ConfirmPasswordEntry"
+               Placeholder="Confirm Password"
+               IsPassword="True"
+               FontSize="16"
+               ClearButtonVisibility="WhileEditing" />
+
+        <Button x:Name="CreateAccountButton"
+                Text="Create Account"
+                Clicked="OnCreateAccountClicked"
+                BackgroundColor="#007AFF"
+                TextColor="White"
+                CornerRadius="8"
+                HeightRequest="50"
+                FontSize="18"
+                Margin="0,10,0,0" />
+
+        <Button Text="Back to Login"
+                Clicked="OnBackClicked"
+                BackgroundColor="#E0E0E0"
+                TextColor="Black"
+                CornerRadius="8"
+                HeightRequest="50"
+                FontSize="16" />
 
     </VerticalStackLayout>
-
 </ContentPage>

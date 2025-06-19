@@ -6,6 +6,7 @@ namespace SAPTracker.Services
     public class FirebaseAuthService
     {
         private readonly string apiKey;
+        private static readonly HttpClient httpClient = new();
 
         public FirebaseAuthService()
         {
@@ -20,133 +21,76 @@ namespace SAPTracker.Services
             apiKey = settings?.Firebase.ApiKey ?? throw new Exception("Firebase API Key missing from appsettings.json.");
         }
 
-
-
-        private readonly HttpClient httpClient = new();
-
-        public async Task<(bool Success, string Message)> RegisterAsync(string email, string password)
+        private string ExtractErrorMessage(string responseString)
         {
-            var requestData = new
+            try
             {
-                email,
-                password,
-                returnSecureToken = true
-            };
+                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
+                return error.GetProperty("error").GetProperty("message").GetString() ?? "Unknown error.";
+            }
+            catch
+            {
+                return "Unexpected error format.";
+            }
+        }
 
+        private async Task<(bool Success, string Message)> PostFirebaseRequestAsync(string endpoint, object requestData)
+        {
             var json = JsonSerializer.Serialize(requestData);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await httpClient.PostAsync(
-                $"https://identitytoolkit.googleapis.com/v1/accounts:signUp?key={apiKey}",
-                content
-            );
+                $"https://identitytoolkit.googleapis.com/v1/{endpoint}?key={apiKey}",
+                content);
 
             var responseString = await response.Content.ReadAsStringAsync();
 
-            if (response.IsSuccessStatusCode)
-            {
-                return (true, "Account created successfully!");
-            }
-            else
-            {
-                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
-                var message = error.GetProperty("error").GetProperty("message").GetString();
-                return (false, message ?? "Failed to create account.");
-            }
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine($"Firebase Response ({endpoint}): {responseString}");
+#endif
+
+            return response.IsSuccessStatusCode
+                ? (true, "Success")
+                : (false, ExtractErrorMessage(responseString));
         }
 
-        public async Task<(bool Success, string Message)> LoginAsync(string email, string password)
+        public Task<(bool Success, string Message)> RegisterAsync(string email, string password)
         {
-            var requestData = new
+            return PostFirebaseRequestAsync("accounts:signUp", new
             {
                 email,
                 password,
                 returnSecureToken = true
-            };
-
-            var json = JsonSerializer.Serialize(requestData);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await httpClient.PostAsync(
-                $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key={apiKey}",
-                content
-            );
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                return (true, "Login successful!");
-            }
-            else
-            {
-                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
-                var message = error.GetProperty("error").GetProperty("message").GetString();
-                return (false, message ?? "Failed to login.");
-            }
+            });
         }
 
-        public async Task<(bool Success, string Message)> SendPasswordResetEmailAsync(string email)
+        public Task<(bool Success, string Message)> LoginAsync(string email, string password)
         {
-            var requestData = new
+            return PostFirebaseRequestAsync("accounts:signInWithPassword", new
+            {
+                email,
+                password,
+                returnSecureToken = true
+            });
+        }
+
+        public Task<(bool Success, string Message)> SendPasswordResetEmailAsync(string email)
+        {
+            return PostFirebaseRequestAsync("accounts:sendOobCode", new
             {
                 requestType = "PASSWORD_RESET",
                 email
-            };
-
-            var json = JsonSerializer.Serialize(requestData);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await httpClient.PostAsync(
-                $"https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key={apiKey}",
-                content
-            );
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                return (true, "Password reset email sent.");
-            }
-            else
-            {
-                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
-                var message = error.GetProperty("error").GetProperty("message").GetString();
-                return (false, message ?? "Failed to send reset email.");
-            }
+            });
         }
 
-        // ⭐ ADD THIS GOOGLE LOGIN METHOD:
-        public async Task<(bool Success, string Message)> LoginWithGoogleAsync(string idToken)
+        public Task<(bool Success, string Message)> LoginWithGoogleAsync(string idToken)
         {
-            var requestData = new
+            return PostFirebaseRequestAsync("accounts:signInWithIdp", new
             {
                 postBody = $"id_token={idToken}&providerId=google.com",
                 requestUri = "http://localhost",
                 returnSecureToken = true
-            };
-
-            var json = JsonSerializer.Serialize(requestData);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await httpClient.PostAsync(
-                $"https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key={apiKey}",
-                content
-            );
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                return (true, "Google login successful!");
-            }
-            else
-            {
-                var error = JsonSerializer.Deserialize<JsonElement>(responseString);
-                var message = error.GetProperty("error").GetProperty("message").GetString();
-                return (false, message ?? "Failed to login with Google.");
-            }
+            });
         }
-
     }
 }

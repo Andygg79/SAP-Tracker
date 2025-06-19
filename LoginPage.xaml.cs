@@ -1,18 +1,25 @@
-﻿using SAPTracker.Services;
+﻿using Plugin.Firebase.CloudMessaging;
+using SAPTracker.Services;
+
 
 namespace SAPTracker;
 
 public partial class LoginPage : ContentPage
 {
-    public LoginPage()
+    private readonly FirebaseAuthService _authService;
+    private readonly FirestoreService _firestoreService;
+
+    public LoginPage(FirebaseAuthService authService, FirestoreService firestoreService)
     {
         InitializeComponent();
+        _authService = authService;
+        _firestoreService = firestoreService;
     }
 
     private async void OnLoginClicked(object sender, EventArgs e)
     {
         string email = EmailEntry.Text?.Trim() ?? "";
-        string password = PasswordEntry.Text ?? "";
+        string password = PasswordEntry.Text?.Trim() ?? "";
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
@@ -20,41 +27,61 @@ public partial class LoginPage : ContentPage
             return;
         }
 
-        var authService = new FirebaseAuthService();
-        var (success, message) = await authService.LoginAsync(email, password);
+        var (success, message) = await _authService.LoginAsync(email, password);
 
-        if (success)
-        {
-            SessionService.IsLoggedIn = true;
-            SessionService.CurrentUserEmail = email;
-
-            await DisplayAlert("Login Success", $"Welcome, {email}!", "Continue");
-
-            var firestoreService = new FirestoreService();
-            bool profileComplete = await firestoreService.CheckProfileCompleteAsync(email);
-
-            if (profileComplete)
-            {
-                await Navigation.PushAsync(new SelectionPage(email));
-            }
-            else
-            {
-                await Navigation.PushAsync(new SelectionPage(email)); // (Temporary for now!)
-            }
-        }
-        else
+        if (!success)
         {
             await DisplayAlert("Login Failed", message, "OK");
+            return;
+        }
+
+        bool profileComplete = await _firestoreService.CheckProfileCompleteAsync(email);
+
+        if (!profileComplete)
+        {
+            await DisplayAlert("Profile Incomplete", "Please complete your profile before proceeding.", "OK");
+            return;
+        }
+
+        SessionService.StartSession(email);
+
+        // ✅ Register the FCM token after login
+        await RegisterDeviceTokenAsync(email);
+
+        await DisplayAlert("Login Success", $"Welcome, {email}!", "Continue");
+
+        var selectionPage = new SelectionPage(_firestoreService, email);
+        await Navigation.PushAsync(selectionPage);
+    }
+
+    private async Task RegisterDeviceTokenAsync(string userEmail)
+    {
+        try
+        {
+
+            var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+            Console.WriteLine($"✅ Registered FCM Token: {token}");
+
+            // Optionally: Save to Firestore
+            await _firestoreService.SaveDeviceTokenAsync(userEmail, token);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"⚠️ FCM Token Registration Failed: {ex.Message}");
         }
     }
+
+
 
     private async void OnCreateAccountClicked(object sender, EventArgs e)
     {
-        await Navigation.PushModalAsync(new RegisterPage());
-    }
-    private async void OnForgotPasswordClicked(object sender, EventArgs e)
-    {
-        await Navigation.PushModalAsync(new ForgotPasswordPage());
+        var registerPage = new RegisterPage(_authService, _firestoreService);
+        await Navigation.PushModalAsync(registerPage);
     }
 
+    private async void OnForgotPasswordClicked(object sender, EventArgs e)
+    {
+        var forgotPage = new ForgotPasswordPage(_authService);
+        await Navigation.PushModalAsync(forgotPage);
+    }
 }

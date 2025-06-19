@@ -2,16 +2,18 @@ using SAPTracker.Services;
 
 namespace SAPTracker;
 
-
-
 public partial class SelectionPage : ContentPage
 {
-    private string CurrentUserEmail = "";
-    public SelectionPage(string email)
+    private readonly FirestoreService _firestoreService;
+    private readonly string _userEmail;
+
+    public SelectionPage(FirestoreService firestoreService, string userEmail)
     {
         InitializeComponent();
-        CurrentUserEmail = email;
+        _firestoreService = firestoreService;
+        _userEmail = userEmail;
     }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -19,31 +21,28 @@ public partial class SelectionPage : ContentPage
         if (!SessionService.IsLoggedIn)
         {
             await DisplayAlert("Session Expired", "Please login again.", "OK");
-            await Navigation.PopToRootAsync(); // Return to MainPage
+            await Navigation.PopToRootAsync(); // Return to login page
         }
     }
 
-
+    #region Navigation Handlers
 
     private async void OnIndividualClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new IndividualViewPage(CurrentUserEmail));
+        await Navigation.PushAsync(new IndividualViewPage(_userEmail));
     }
 
     private async void OnTeamClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new TeamMetricsPage(CurrentUserEmail));
+        await Navigation.PushAsync(new TeamMetricsPage(_userEmail));
     }
+
     private async void OnLogoutClicked(object sender, EventArgs e)
     {
-        SessionService.IsLoggedIn = false; // Clear login flag
-
+        SessionService.EndSession();
         await DisplayAlert("Logged Out", "You have been logged out.", "OK");
-
-        await Navigation.PopToRootAsync(); // Return to MainPage (Login)
+        await Navigation.PopToRootAsync(); // Return to login page
     }
 
-
-
+    #endregion
 }
-

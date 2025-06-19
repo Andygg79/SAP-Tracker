@@ -4,9 +4,12 @@ namespace SAPTracker;
 
 public partial class ForgotPasswordPage : ContentPage
 {
-    public ForgotPasswordPage()
+    private readonly FirebaseAuthService _authService;
+
+    public ForgotPasswordPage(FirebaseAuthService authService)
     {
         InitializeComponent();
+        _authService = authService;
     }
 
     private async void OnSendClicked(object sender, EventArgs e)
@@ -19,15 +22,11 @@ public partial class ForgotPasswordPage : ContentPage
             return;
         }
 
-        var authService = new FirebaseAuthService();
-        var (success, message) = await authService.SendPasswordResetEmailAsync(email);
-
         // Show loading spinner
         LoadingIndicator.IsRunning = true;
-        LoadingIndicator.IsVisible = true;        
+        LoadingIndicator.IsVisible = true;
 
-        authService = new FirebaseAuthService();
-        (success, message) = await authService.SendPasswordResetEmailAsync(email);
+        var (success, message) = await _authService.SendPasswordResetEmailAsync(email);
 
         // Hide loading spinner
         LoadingIndicator.IsRunning = false;

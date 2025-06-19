@@ -1,7 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net9.0-android;net9.0-ios;net9.0-maccatalyst;net9.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net9.0-android</TargetFrameworks>
+
 
 
 		<OutputType>Exe</OutputType>
@@ -16,9 +18,8 @@
 		<!-- YOUR REAL PACKAGE NAME -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
-
-		<WindowsPackageType>None</WindowsPackageType>
 	</PropertyGroup>
+	
 
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
@@ -31,10 +32,12 @@
 		<!-- ADDED -->
 	</ItemGroup>
 
+
 	<ItemGroup>
-		<PackageReference Include="Google.Apis.Auth" Version="1.69.0" />
-		<PackageReference Include="Plugin.FirebaseAuth.LinkerFix" Version="4.1.0" />
+		<PackageReference Include="Google.Apis.Auth" Version="1.70.0" />
+		<PackageReference Include="Plugin.Firebase" Version="3.1.4" />
 	</ItemGroup>
+
 
 	<ItemGroup>
 		<None Update="appsettings.json">
@@ -46,6 +49,9 @@
 		<MauiXaml Update="ForgotPasswordPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="LoginPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="IndividualViewPage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="ProfilePage.xaml" Generator="MSBuild:Compile" />
 		<MauiXaml Update="RegisterPage.xaml" Generator="MSBuild:Compile" />
@@ -55,8 +61,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.60" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="9.0.80" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.6" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -64,6 +70,4 @@
 	    <DependentUpon>LoginPage.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
-
-
 </Project>

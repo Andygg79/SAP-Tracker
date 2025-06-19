@@ -5,10 +5,16 @@
              Title="Soldier Profile">
 
     <ScrollView>
-        <VerticalStackLayout x:DataType="local:MetricEntry">
-            <BoxView WidthRequest="20" HeightRequest="20"
-                     Color="{Binding StatusColor}"
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Status Dot -->
+            
+            <BoxView x:Name="StatusBox" 
+                     WidthRequest="20" HeightRequest="20"
+                     Color="{Binding UiColor}"
                      CornerRadius="10" />
+
+            <Label Text="{Binding DisplayDate}" />
 
             <!-- Soldier Info Section -->
             <Border Stroke="Black" Padding="20" BackgroundColor="#EFEFEF">
@@ -27,30 +33,35 @@
             <Label Text="Readiness Metrics"
                    FontSize="24"
                    FontAttributes="Bold"
-                   HorizontalOptions="Center"
-                   Margin="0,10,0,10" />
+                   HorizontalOptions="Center" />
 
             <!-- Metrics List -->
-            <CollectionView x:Name="MetricsList">
+            <CollectionView x:Name="MetricsList"
+                            ItemsLayout="VerticalList"
+                            Margin="0,10,0,0">
                 <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame BorderColor="Black" CornerRadius="8" Padding="10" Margin="5">
-                            <HorizontalStackLayout x:DataType="local:MetricEntry" Spacing="10" VerticalOptions="Center">
-                                <BoxView x:DataType="local:MetricEntry" WidthRequest="20" HeightRequest="20"
-                                    Color="{Binding StatusColor}"
-                                    CornerRadius="10" />
+                    <DataTemplate x:DataType="local:MetricEntry">
+                        <Border Stroke="Black" Padding="10" Margin="5">
+                            <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                                <BoxView WidthRequest="20"
+                                         HeightRequest="20"
+                                         CornerRadius="10"
+                                         Color="{Binding StatusColor}" />
 
-                                <VerticalStackLayout x:DataType="local:MetricEntry">
-                                    <Label Text="{Binding MetricName}" />
-                                    <Label Text="{Binding LastUpdatedDate}" />
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding MetricName}"
+                                           FontAttributes="Bold"
+                                           FontSize="16" />
+                                    <Label Text="{Binding LastUpdatedDate}"
+                                           FontSize="14"
+                                           TextColor="Gray" />
                                 </VerticalStackLayout>
                             </HorizontalStackLayout>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
         </VerticalStackLayout>
     </ScrollView>
-
 </ContentPage>

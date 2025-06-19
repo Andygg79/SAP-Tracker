@@ -4,44 +4,73 @@ namespace SAPTracker;
 
 public partial class SoldierProfilePage : ContentPage
 {
-    private string SoldierEmail = "";
+    private readonly string SoldierEmail;
 
     public SoldierProfilePage(string email)
     {
         InitializeComponent();
         SoldierEmail = email;
-        LoadSoldierData();
     }
 
-    private async void LoadSoldierData()
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await LoadSoldierData();
+    }
+
+    private async Task LoadSoldierData()
     {
         var firestoreService = new FirestoreService();
 
         var (firstName, lastName) = await firestoreService.GetUserProfileAsync(SoldierEmail);
+        var profile = await firestoreService.GetFullUserProfileAsync(SoldierEmail);
         var metrics = await firestoreService.LoadMetricsAsync(SoldierEmail);
 
         NameLabel.Text = $"{firstName} {lastName}";
+        RankLabel.Text = $"Rank: {profile.Rank}";
+        UnitLabel.Text = $"Unit: {profile.Unit}";
+        DutyTitleLabel.Text = $"Duty Title: {profile.DutyTitle}";
 
-        // Fetch full profile fields
-        var profile = await firestoreService.GetFullUserProfileAsync(SoldierEmail);
+        var viewModelList = new List<MetricEntryViewModel>();
+        string overallStatus = "GREEN";
 
-        RankLabel.Text = $"Rank: {profile.Rank ?? "Unknown"}";
-        UnitLabel.Text = $"Unit: {profile.Unit ?? "Unknown"}";
-        DutyTitleLabel.Text = $"Duty Title: {profile.DutyTitle ?? "Unknown"}";
-
-        // Metrics
-        MetricsList.ItemsSource = metrics.Select(m => new
+        foreach (var (metricName, entry) in metrics)
         {
-            MetricName = m.Key,
-            Status = m.Value.StatusColor.ToUpper() switch
+            viewModelList.Add(new MetricEntryViewModel
             {
-                "RED" => Colors.Red,
-                "AMBER" => Colors.LightCoral,
-                "GREEN" => Colors.Green,
-                _ => Colors.Gray
-            },
-            LastUpdate = m.Value.LastUpdatedDate.ToString("yyyy-MM-dd")
-        }).ToList();
-    }
+                MetricName = metricName,
+                StatusColor = entry.StatusColor.ToUpper() switch
+                {
+                    "RED" => Colors.Red,
+                    "AMBER" => Colors.Orange,
+                    "GREEN" => Colors.Green,
+                    _ => Colors.Gray
+                },
+                LastUpdatedDate = entry.LastUpdatedDate.ToString("yyyy-MM-dd")
+            });
 
+            if (entry.StatusColor.ToUpper() == "RED")
+                overallStatus = "RED";
+            else if (entry.StatusColor.ToUpper() == "AMBER" && overallStatus != "RED")
+                overallStatus = "AMBER";
+        }
+
+        // Set overall status color in top-level dot
+        StatusBox.Color = overallStatus switch
+        {
+            "RED" => Colors.Red,
+            "AMBER" => Colors.Orange,
+            "GREEN" => Colors.Green,
+            _ => Colors.Gray
+        };
+
+        MetricsList.ItemsSource = viewModelList;
+    }
+}
+
+public class MetricEntryViewModel
+{
+    public string MetricName { get; set; } = "";
+    public string LastUpdatedDate { get; set; } = "";
+    public Color StatusColor { get; set; } = Colors.Gray;
 }
