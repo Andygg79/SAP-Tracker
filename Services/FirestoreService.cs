@@ -6,7 +6,7 @@ namespace SAPTracker.Services
 {
     public class FirestoreService
     {
-        private readonly string projectId = "sapt-24jk2y";
+        private readonly string projectId = "saptracker-1979";
         private readonly HttpClient httpClient = new();
 
         private static string SafeEmail(string email)
@@ -34,7 +34,7 @@ namespace SAPTracker.Services
         public async Task<bool> SaveDeviceTokenAsync(string email, string token)
         {
             var safeEmailId = SafeEmail(email);
-            var url = $"https://firestore.googleapis.com/v1/projects/sapt-24jk2y/databases/(default)/documents/users/{safeEmailId}?updateMask.fieldPaths=DeviceToken";
+            var url = $"https://firestore.googleapis.com/v1/projects/saptracker-1979/databases/(default)/documents/users/{safeEmailId}?updateMask.fieldPaths=DeviceToken";
 
             var requestData = new
             {

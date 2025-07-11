@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.saptracker.app"
+          package="com.SAPTracker.app"
           xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Permissions -->
@@ -14,13 +14,13 @@
         android:allowBackup="true"
         android:icon="@mipmap/appicon"
         android:roundIcon="@mipmap/appicon_round"
-        android:label="SAPTracker"
+        android:label="SAPTracker App"
         android:supportsRtl="true"
         android:theme="@style/Maui.SplashTheme">
 
         <!-- Firebase Messaging Service -->
         <service
-            android:name="com.saptracker.app.Platforms.Android.MyFirebaseMessagingService"
+            android:name="com.SAPTracker.app.Platforms.Android.MyFirebaseMessagingService"
             android:exported="true"
             tools:node="replace">
         <intent-filter>
@@ -36,7 +36,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.saptracker.app" />
+                <category android:name="com.SAPTracker.app" />
             </intent-filter>
         </receiver>
 

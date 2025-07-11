@@ -10,15 +10,28 @@ namespace SAPTracker.Services
 
         public FirebaseAuthService()
         {
-            var settingsPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
-
-            if (!File.Exists(settingsPath))
-                throw new Exception($"appsettings.json not found at path: {settingsPath}");
-
-            var json = File.ReadAllText(settingsPath);
+            var json = LoadAppSettingsJson();
             var settings = JsonSerializer.Deserialize<Models.AppSettings>(json);
 
             apiKey = settings?.Firebase.ApiKey ?? throw new Exception("Firebase API Key missing from appsettings.json.");
+        }
+
+        private string LoadAppSettingsJson()
+        {
+#if ANDROID
+            // Read from Android Assets (MauiAsset)
+            using var stream = Android.App.Application.Context.Assets.Open("appsettings.json");
+            using var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+#elif WINDOWS || MACCATALYST
+            // Read from local filesystem (for Windows/Mac)
+            var settingsPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+            if (!File.Exists(settingsPath))
+                throw new Exception($"appsettings.json not found at path: {settingsPath}");
+            return File.ReadAllText(settingsPath);
+#else
+            throw new PlatformNotSupportedException("Platform not supported for appsettings.json loading.");
+#endif
         }
 
         private string ExtractErrorMessage(string responseString)

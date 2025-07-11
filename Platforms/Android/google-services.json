@@ -1,46 +1,54 @@
 {
-    "project_info": {
-        "project_number": "442299156516",
-        "project_id": "sapt-24jk2y",
-        "storage_bucket": "sapt-24jk2y.firebasestorage.app"
-    },
-    "client": [
-        {
-            "client_info": {
-                "mobilesdk_app_id": "1:442299156516:android:9c96c7385547299ba830b1",
-                "android_client_info": {
-                    "package_name": "com.saptracker.app"
-                }
-            },
-            "oauth_client": [
-                {
-                    "client_id": "442299156516-753eft2sj3t1ia6ihk6082f696jtn731.apps.googleusercontent.com",
-                    "client_type": 3
-                }
-            ],
-            "api_key": [
-                {
-                    "current_key": "AIzaSyCn6iinPpFDiphveUBX4FwcgBpLAkg0NJk"
-                }
-            ],
-            "services": {
-                "appinvite_service": {
-                    "other_platform_oauth_client": [
-                        {
-                            "client_id": "442299156516-753eft2sj3t1ia6ihk6082f696jtn731.apps.googleusercontent.com",
-                            "client_type": 3
-                        },
-                        {
-                            "client_id": "442299156516-b8jp3cgak8m3ast2graveccj37ehj6ep.apps.googleusercontent.com",
-                            "client_type": 2,
-                            "ios_info": {
-                                "bundle_id": "com.mycompany.saptracker"
-                            }
-                        }
-                    ]
-                }
-            }
+  "project_info": {
+    "project_number": "2076683662",
+    "project_id": "saptracker-1979",
+    "storage_bucket": "saptracker-1979.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2076683662:android:3137e785fcf4f1047248df",
+        "android_client_info": {
+          "package_name": "com.SAPTracker.app"
         }
-    ],
-    "configuration_version": "1"
+      },
+      "oauth_client": [
+        {
+          "client_id": "2076683662-irs5hnduug0cds4u7e198u4si5th8adv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.SAPTracker.app",
+            "certificate_hash": "0244eb47ddce6c9445bff818706850842458fac1"
+          }
+        },
+        {
+          "client_id": "2076683662-2cisdq6c2iq4837918ddb0u3f8lr1kgk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-dcDo17cQs7e3vpOpkBW6t8aEuDRwPDA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2076683662-2cisdq6c2iq4837918ddb0u3f8lr1kgk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "2076683662-fdi9c46vso7brif77gas1v8dmka7227m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.companyname.militaryadmindeploymentapplication"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
 }
